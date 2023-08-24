@@ -7,11 +7,13 @@
 #include <unordered_map>
 #include <memory>
 
+#include "Timer.h"
+
 //forward declaration
 struct opcode;
-struct Memory;
+class Memory;
 
-enum registers : int
+enum class Registers : int
 {
 	A = 0,
 	B = 1,
@@ -87,10 +89,16 @@ public:
 	static constexpr int ProcesserFrequency = 2000000; // 2_000_000 or 2 Mhz
 
 public:
-	void load_register_value(registers reg, uint8_t* value);
+	void load_register_value(Registers reg, uint8_t* value);
 	void execute_opcode(std::shared_ptr<opcode> cur_op, Memory* mem);
 
 public:
 	static std::string RegToStr(int r);
 
+public:
+	//turn on if game/instructions needs to be frame time limited.
+	static constexpr bool LimitCycles = true;
+
+private:
+	Timer timer;
 };

@@ -5,28 +5,15 @@
 #include "Opcodes.h"
 #include "MEM.h"
 
-//turn on if game/instructions needs to be frame time limited.
-constexpr bool bLimitOpcodeSpeed = false;
-
 void CPU::execute_opcode(std::shared_ptr<opcode> cur_op, Memory* mem)
 {
-	if (bLimitOpcodeSpeed)
+	if constexpr (LimitCycles)
 	{
-		auto start_time = std::chrono::high_resolution_clock::now();
-
+		timer.Reset();
 		cur_op->execute(this, mem);
-
-		auto end_time = std::chrono::high_resolution_clock::now();
-
-		long long time_difference = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count();
-
 		//1 cycle takes 500 nano seconds (1 / 2,000,000) * 1,000,000,000
-
-		long long sleep_time = (500 * cur_op->m_cycle_duration) - time_difference;
-
-		this->PC += cur_op->m_size; //NOt 100 percent sure this is right but
-
-		std::this_thread::sleep_for(std::chrono::nanoseconds(sleep_time));
+		timer.Sleep((500 * cur_op->m_cycle_duration) - timer.Time());
+		this->PC += cur_op->m_size; //NOt 100 percent sure this is right 
 	}
 	else
 	{
@@ -41,58 +28,56 @@ std::string CPU::RegToStr(int r)
 	return reg[r];
 }
 
-
-void CPU::load_register_value(registers reg, uint8_t* value)
+void CPU::load_register_value(Registers reg, uint8_t* value)
 {
 	switch (reg)
 	{
-	case registers::A:
+	case Registers::A:
 	{
 		this->A = value[0];
-	}
-	case registers::B:
+	} break;
+	case Registers::B:
 	{
 		this->B = value[0];
-	}
-	case registers::C:
+	} break;
+	case Registers::C:
 	{
 		this->C = value[0];
-	}
-	case registers::BC:
+	} break;
+	case Registers::BC:
 	{
 		this->C = value[0];
 		this->B = value[1];
 	}
-	case registers::D:
+	case Registers::D:
 	{
 		this->D = value[0];
-	}
-	case registers::E:
+	} break;
+	case Registers::E:
 	{
 		this->E = value[0];
-	}
-	case registers::DE:
+	} break;
+	case Registers::DE:
 	{
 		this->E = value[0];
 		this->D = value[1];
-	}
-	case registers::H:
+	} break;
+	case Registers::H:
 	{
 		this->H = value[0];
-	}
-	case registers::L:
+	} break;
+	case Registers::L:
 	{
 		this->L = value[0];
-	}
-	case registers::HL:
+	} break;
+	case Registers::HL:
 	{
 		this->L = value[0];
 		this->H = value[1];
-	}
+	} break;
 	default:
 	{
 		printf("INVALID REGISTER FOR fn load_register_value");
-		break;
-	}
+	} break;
 	}
 }

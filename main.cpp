@@ -21,7 +21,8 @@ void test()
 {	
 	Memory mem;
 	CPU cpu;
-	std::shared_ptr<opcode> currentOpcode = std::make_shared<STA>();
+	std::shared_ptr<opcode> currentOpcode = std::make_shared<LXI>(Registers::A);
+	std::cout << currentOpcode->to_string(&cpu, &mem) << '\n';
 	cpu.execute_opcode(currentOpcode, &mem);
 }
 

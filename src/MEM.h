@@ -6,6 +6,8 @@
 #include <iostream>
 #include <bitset>
 
+#include "util.h"
+
 #ifndef I8080_32BIT_MEM
 	//#define I8080_32BIT_MEM
 #endif
@@ -86,9 +88,9 @@ public:
 			e.flag |= (int)ErrorFlags::INVALID_READ;
 			SetMemSectionFlag<PtrLoc>(e);
 			SetDebugMsg(e, "Memory read through DirectReadByte out of bound.\n"
-				"Read attepmpt at offset " + std::to_string(offset) +
+				"Read attepmpt at offset " + toHexStr(offset) +
 				".\nNote tht valid memory locations for " + GetName<PtrLoc>() + " are 0 to: " +
-				std::to_string(GetUprBnd<PtrLoc>() - GetLwrBnd<PtrLoc>()));
+				toHexStr(GetUprBnd<PtrLoc>() - GetLwrBnd<PtrLoc>()));
 			return 0;
 		}
 		SetDebugMsg(e, "Operation succeeded");
@@ -110,9 +112,9 @@ public:
 			e.flag |= (int)ErrorFlags::INVALID_READ;
 			SetMemSectionFlag<DataLoc>(e);
 			SetDebugMsg(e, "Memory read through DirectReadByte out of bound.\n"
-				"Read attepmpt at offset " + std::to_string(offset) +
+				"Read attepmpt at offset " + toHexStr(offset) +
 				".\nNote tht valid memory locations for " + GetName<DataLoc>() + " are 0 to: " +
-				std::to_string(GetUprBnd<DataLoc>() - GetLwrBnd<DataLoc>()));
+				toHexStr(GetUprBnd<DataLoc>() - GetLwrBnd<DataLoc>()));
 			return 0;
 		}
 		SetDebugMsg(e, "Operation succeeded");
@@ -149,9 +151,9 @@ public:
 			e.flag |= (int)ErrorFlags::INVALID_READ;
 			SetMemSectionFlag<PtrLoc>(e);
 			SetDebugMsg(e, "Memory read through IndirectReadBytes out of bound.\n"
-				"Reading " + std::to_string(Bytes) + " bytes from offset " + std::to_string(offset) + 
+				"Reading " + std::to_string(Bytes) + " bytes from offset " + toHexStr(offset) +
 				".\nNote tht valid memory locations for " + GetName<PtrLoc>() + " are 0 to: " +
-				std::to_string(GetUprBnd<DataLoc>() - GetLwrBnd<DataLoc>()));
+				toHexStr(GetUprBnd<DataLoc>() - GetLwrBnd<DataLoc>()));
 			return 0;
 		}
 		Ptr index = JoinBytes<PtrLoc, Bytes>(offset);
@@ -161,11 +163,11 @@ public:
 			e.flag |= (int)ErrorFlags::INVALID_READ;
 			SetMemSectionFlag<DataLoc>(e);
 			SetDebugMsg(e, "Memory read through IndirectReadBytes out of bound.\n" 
-				"Reading " + std::to_string(Bytes) + " bytes of combined address from offset " + std::to_string(offset) + 
-				" succeeded\n. The memory location is " + std::to_string(index) + 
+				"Reading " + std::to_string(Bytes) + " bytes of combined address from offset " + toHexStr(offset) +
+				" succeeded\n. The memory location is " + toHexStr(index) +
 				". However, this memory location is invalid for " + GetName<DataLoc>() +
 				".\nValid locations are: 0" +  + " to " + 
-				std::to_string(GetUprBnd<DataLoc>() - GetLwrBnd<DataLoc>()));
+				toHexStr(GetUprBnd<DataLoc>() - GetLwrBnd<DataLoc>()));
 			return 0;
 		}
 
@@ -188,9 +190,9 @@ public:
 			e.flag |= (int)ErrorFlags::INVALID_WRITE;
 			SetMemSectionFlag<DataLoc>(e);
 			SetDebugMsg(e, "Memory write through DirectWriteByte out of bound.\n" 
-				"Write attepmpt at offset " + std::to_string(offset) + 
+				"Write attepmpt at offset " + toHexStr(offset) +
 				".\nNote tht valid memory locations for " + GetName<DataLoc>() + " are 0 to: " +
-				std::to_string(GetUprBnd<DataLoc>() - GetLwrBnd<DataLoc>()));
+				toHexStr(GetUprBnd<DataLoc>() - GetLwrBnd<DataLoc>()));
 			return;
 		}
 		SetDebugMsg(e, "Operation succeeded");

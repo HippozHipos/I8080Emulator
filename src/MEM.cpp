@@ -27,7 +27,8 @@ bool Memory::AdressableRangeCheck(int p, ErrorCode& e)
 	if (p > TotalAdrSpaceUprBnd)
 	{
 		e.flag |= (int)ErrorFlags::MEM_OUT_OF_BOUND;
-		e.msg = "Invalid argument to IndirectReadBytes. Offset outside of total addressable range";
+		SetDebugMsg(e, 
+			"Invalid argument to IndirectReadBytes. Offset outside of total addressable range");
 		return false;
 	}
 	return true;

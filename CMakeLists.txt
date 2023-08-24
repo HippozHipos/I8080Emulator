@@ -51,7 +51,7 @@ file(GLOB source_files CONFIGURE_DEPENDS
 # Add source to this project's executable.
 # add_executable ( BadTwitter "BadTwitter.cpp" "BadTwitter.h" "src/Manager.cpp" "src/Manager.h" )
 #add_executable (BadTwitter ${source_files})
-add_executable(${PROJECT_NAME} ${source_files} "src/Error.h" "src/Util.cpp" "src/Util.h"   "src/Error.cpp")
+add_executable(${PROJECT_NAME} ${source_files} "src/Error.h" "src/Util.cpp" "src/Util.h"   "src/Error.cpp" "src/Timer.h" "src/Timer.cpp")
 
 #target_link_libraries(BadTwitter ${OPENGL_LIBRARIES} OpenGL::GL glfw imgui)
 #find_package(D3DX11_LIBRARY)

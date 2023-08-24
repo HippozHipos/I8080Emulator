@@ -14,7 +14,7 @@ struct opcode
 	uint8_t m_size;
 	uint8_t m_cycle_duration;
 
-	virtual std::string dissamble_opcode_to_string(CPU* cpu, Memory* mem) = 0;
+	virtual std::string to_string(CPU* cpu, Memory* mem) = 0;
 	virtual void execute(CPU* cpu, Memory* mem) = 0;
 
 	virtual ~opcode() = default;
@@ -24,14 +24,14 @@ struct opcode
 struct NOP : public opcode
 {
 	NOP();
-	std::string dissamble_opcode_to_string(CPU* cpu, Memory* mem) override;
+	std::string to_string(CPU* cpu, Memory* mem) override;
 	void execute(CPU* cpu, Memory* mem) override;
 };
 
 struct LXI : public opcode
 {
-	LXI(registers reg);
-	std::string dissamble_opcode_to_string(CPU* cpu, Memory* mem) override;
+	LXI(Registers reg);
+	std::string to_string(CPU* cpu, Memory* mem) override;
 	void execute(CPU* cpu, Memory* mem) override;
 
 	int m_reg;
@@ -39,8 +39,8 @@ struct LXI : public opcode
 
 struct LDA : public opcode
 {
-	LDA(registers reg);
-	std::string dissamble_opcode_to_string(CPU* cpu, Memory* mem) override;
+	LDA(Registers reg);
+	std::string to_string(CPU* cpu, Memory* mem) override;
 	void execute(CPU* cpu, Memory* mem) override;
 
 	int m_reg;
@@ -48,8 +48,8 @@ struct LDA : public opcode
 
 struct STAX : public opcode
 {
-	STAX(registers reg);
-	std::string dissamble_opcode_to_string(CPU* cpu, Memory* mem) override;
+	STAX(Registers reg);
+	std::string to_string(CPU* cpu, Memory* mem) override;
 	void execute(CPU* cpu, Memory* mem) override;
 
 	int m_reg;
@@ -57,8 +57,8 @@ struct STAX : public opcode
 
 struct SHLD : public opcode
 {
-	SHLD(registers reg);
-	std::string dissamble_opcode_to_string(CPU* cpu, Memory* mem) override;
+	SHLD(Registers reg);
+	std::string to_string(CPU* cpu, Memory* mem) override;
 	void execute(CPU* cpu, Memory* mem) override;
 
 	int m_reg;
@@ -67,14 +67,14 @@ struct SHLD : public opcode
 struct STA : public opcode
 {
 	STA();
-	std::string dissamble_opcode_to_string(CPU* cpu, Memory* mem) override;
+	std::string to_string(CPU* cpu, Memory* mem) override;
 	void execute(CPU* cpu, Memory* mem) override;
 };
 
 struct LDAX : public opcode
 {
-	LDAX(registers reg);
-	std::string dissamble_opcode_to_string(CPU* cpu, Memory* mem) override;
+	LDAX(Registers reg);
+	std::string to_string(CPU* cpu, Memory* mem) override;
 	void execute(CPU* cpu, Memory* mem) override;
 
 	int m_reg;
@@ -82,8 +82,8 @@ struct LDAX : public opcode
 
 struct INX : public opcode
 {
-	INX(registers reg);
-	std::string dissamble_opcode_to_string(CPU* cpu, Memory* mem) override;
+	INX(Registers reg);
+	std::string to_string(CPU* cpu, Memory* mem) override;
 	void execute(CPU* cpu, Memory* mem) override;
 
 	int m_reg;

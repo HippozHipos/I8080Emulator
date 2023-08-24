@@ -1,4 +1,5 @@
 #include "Util.h"
+#include <format>
 
 std::string toUpper(const std::string& input)
 {
@@ -7,4 +8,9 @@ std::string toUpper(const std::string& input)
 		c = std::toupper(c);
 	}
 	return result;
+}
+
+std::string toHexStr(uint16_t input)
+{
+	return toUpper(std::format("{:x}", input));
 }
