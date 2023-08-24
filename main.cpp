@@ -4,7 +4,7 @@
 #include "thirdparty/imgui/imgui.h"
 
 //src includes
-#include "src/win32/PlatformWin32.h" 
+#include "src/PlatformWin/PlatformWin32.h" 
 #include "src/MemoryViewer.h"
 #include "src/dx11/dx11.h"
 #include "src/imgooey/imgooey.h"

@@ -1,5 +1,5 @@
 #include "imgui.h"
-#include "../win32/PlatformWin32.h"
+#include "../PlatformWin/PlatformWin32.h"
 
 
 struct imgooey
