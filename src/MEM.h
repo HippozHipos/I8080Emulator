@@ -7,8 +7,9 @@
 #include <bitset>
 
 #ifndef I8080_32BIT_MEM
-	#define I8080_32BIT_MEM
+	//#define I8080_32BIT_MEM
 #endif
+
 template<uint8_t P> constexpr bool IsByteAligned()
 {
 	return 8 % P == 0;
@@ -84,38 +85,38 @@ public:
 		{
 			e.flag |= (int)ErrorFlags::INVALID_READ;
 			SetMemSectionFlag<PtrLoc>(e);
-			SetDebugMsg("Memory read through DirectReadByte out of bound.\n"
+			SetDebugMsg(e, "Memory read through DirectReadByte out of bound.\n"
 				"Read attepmpt at offset " + std::to_string(offset) +
 				".\nNote tht valid memory locations for " + GetName<PtrLoc>() + " are 0 to: " +
 				std::to_string(GetUprBnd<PtrLoc>() - GetLwrBnd<PtrLoc>()));
 			return 0;
 		}
-		SetDebugMsg("Operation succeeded");
+		SetDebugMsg(e, "Operation succeeded");
 		return m_Memory->at(GetLwrBnd<PtrLoc>() + offset);
 	}
 
-	template<Type PtrLoc = DefaultType>
+	template<Type DataLoc = DefaultType>
 	uint8_t* GetRawPtr(Ptr offset, ErrorCode& e)
 	{
-		if (!AdressableRangeCheck(GetLwrBnd<PtrLoc>() + offset, e))
+		if (!AdressableRangeCheck(GetLwrBnd<DataLoc>() + offset, e))
 		{
 			e.flag |= (int)ErrorFlags::INVALID_READ | (int)ErrorFlags::INVALID_ARGUMENT;
-			SetMemSectionFlag<PtrLoc>(e);
+			SetMemSectionFlag<DataLoc>(e);
 			return 0;
 		}
-		CheckMemUpper(GetUprBnd<PtrLoc>(), GetLwrBnd<PtrLoc>() + offset, e);
+		CheckMemUpper(GetUprBnd<DataLoc>(), GetLwrBnd<DataLoc>() + offset, e);
 		if (e.flag & (int)ErrorFlags::MEM_OUT_OF_BOUND)
 		{
 			e.flag |= (int)ErrorFlags::INVALID_READ;
-			SetMemSectionFlag<PtrLoc>(e);
-			SetDebugMsg("Memory read through DirectReadByte out of bound.\n"
+			SetMemSectionFlag<DataLoc>(e);
+			SetDebugMsg(e, "Memory read through DirectReadByte out of bound.\n"
 				"Read attepmpt at offset " + std::to_string(offset) +
-				".\nNote tht valid memory locations for " + GetName<PtrLoc>() + " are 0 to: " +
-				std::to_string(GetUprBnd<PtrLoc>() - GetLwrBnd<PtrLoc>()));
+				".\nNote tht valid memory locations for " + GetName<DataLoc>() + " are 0 to: " +
+				std::to_string(GetUprBnd<DataLoc>() - GetLwrBnd<DataLoc>()));
 			return 0;
 		}
-		SetDebugMsg("Operation succeeded");
-		return m_Memory->data() + GetLwrBnd<PtrLoc>() + offset;
+		SetDebugMsg(e, "Operation succeeded");
+		return m_Memory->data() + GetLwrBnd<DataLoc>() + offset;
 	}
 
 	template<Type PtrLoc = DefaultType, Type DataLoc = DefaultType, uint8_t Bytes = DefaultBytes>
@@ -137,7 +138,7 @@ public:
 		{
 			e.flag |= (int)ErrorFlags::INVALID_READ | (int)ErrorFlags::INVALID_ARGUMENT;
 			SetMemSectionFlag<PtrLoc>(e);
-			SetDebugMsg("Invalid argument to IndirectReadBytes. Bytes cannot be " + 
+			SetDebugMsg(e, "Invalid argument to IndirectReadBytes. Bytes cannot be " + 
 				std::to_string(Bytes));
 			return 0;
 		}
@@ -147,7 +148,7 @@ public:
 		{
 			e.flag |= (int)ErrorFlags::INVALID_READ;
 			SetMemSectionFlag<PtrLoc>(e);
-			SetDebugMsg("Memory read through IndirectReadBytes out of bound.\n"
+			SetDebugMsg(e, "Memory read through IndirectReadBytes out of bound.\n"
 				"Reading " + std::to_string(Bytes) + " bytes from offset " + std::to_string(offset) + 
 				".\nNote tht valid memory locations for " + GetName<PtrLoc>() + " are 0 to: " +
 				std::to_string(GetUprBnd<DataLoc>() - GetLwrBnd<DataLoc>()));
@@ -159,7 +160,7 @@ public:
 		{
 			e.flag |= (int)ErrorFlags::INVALID_READ;
 			SetMemSectionFlag<DataLoc>(e);
-			SetDebugMsg("Memory read through IndirectReadBytes out of bound.\n"
+			SetDebugMsg(e, "Memory read through IndirectReadBytes out of bound.\n" 
 				"Reading " + std::to_string(Bytes) + " bytes of combined address from offset " + std::to_string(offset) + 
 				" succeeded\n. The memory location is " + std::to_string(index) + 
 				". However, this memory location is invalid for " + GetName<DataLoc>() +
@@ -168,40 +169,40 @@ public:
 			return 0;
 		}
 
-		SetDebugMsg("Operation succeeded");
+		SetDebugMsg(e, "Operation succeeded");
 		return m_Memory->at(GetLwrBnd<DataLoc>() + index);
 	}
 
-	template<Type PtrLoc = DefaultType>
+	template<Type DataLoc = DefaultType>
 	void DirectWriteByte(Ptr offset, uint8_t data, ErrorCode& e)
 	{
-		if (!AdressableRangeCheck(GetLwrBnd<PtrLoc>() + offset, e))
+		if (!AdressableRangeCheck(GetLwrBnd<DataLoc>() + offset, e))
 		{
 			e.flag |= (int)ErrorFlags::INVALID_READ | (int)ErrorFlags::INVALID_ARGUMENT;
-			SetMemSectionFlag<PtrLoc>(e);
+			SetMemSectionFlag<DataLoc>(e);
 			return;
 		}
-		CheckMemUpper(GetUprBnd<PtrLoc>(), GetLwrBnd<PtrLoc>() + offset, e);
+		CheckMemUpper(GetUprBnd<DataLoc>(), GetLwrBnd<DataLoc>() + offset, e);
 		if (e.flag & (int)ErrorFlags::MEM_OUT_OF_BOUND)
 		{
 			e.flag |= (int)ErrorFlags::INVALID_WRITE;
-			SetMemSectionFlag<PtrLoc>(e);
-			SetDebugMsg("Memory write through DirectWriteByte out of bound.\n"
+			SetMemSectionFlag<DataLoc>(e);
+			SetDebugMsg(e, "Memory write through DirectWriteByte out of bound.\n" 
 				"Write attepmpt at offset " + std::to_string(offset) + 
-				".\nNote tht valid memory locations for " + GetName<PtrLoc>() + " are 0 to: " +
-				std::to_string(GetUprBnd<PtrLoc>() - GetLwrBnd<PtrLoc>()));
+				".\nNote tht valid memory locations for " + GetName<DataLoc>() + " are 0 to: " +
+				std::to_string(GetUprBnd<DataLoc>() - GetLwrBnd<DataLoc>()));
 			return;
 		}
-		SetDebugMsg("Operation succeeded");
-		m_Memory->data()[GetLwrBnd<PtrLoc>() + offset] = data;
+		SetDebugMsg(e, "Operation succeeded");
+		m_Memory->data()[GetLwrBnd<DataLoc>() + offset] = data;
 	}
 
-	template<Type PtrLoc = DefaultType, uint8_t Bytes = DefaultBytes>
+	template<Type DataLoc = DefaultType, uint8_t Bytes = DefaultBytes>
 	Ptr JoinBytes(Ptr offset)
 	{
 		Ptr index = 0;
 		uint8_t i = Bytes;
-		Ptr totalOffset = GetLwrBnd<PtrLoc>() + offset;
+		Ptr totalOffset = GetLwrBnd<DataLoc>() + offset;
 		do
 		{
 			if constexpr (Bytes == 1)

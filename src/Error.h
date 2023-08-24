@@ -23,8 +23,9 @@ struct ErrorCode
 #endif
 };
 
+
 #if defined(DEBUG) || defined(_DEBUG)
-#define SetDebugMsg(e, ...) e.msg = (__VA_ARGS__)
+#define SetDebugMsg(e, ...) e.msg = __VA_ARGS__
 #define PrintDebugMsg(e) std::cout << e.msg << '\n';
 #else
 #define SetDebugStringMsg(...) 
