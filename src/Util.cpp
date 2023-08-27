@@ -12,5 +12,5 @@ std::string toUpper(const std::string& input)
 
 std::string toHexStr(uint16_t input)
 {
-	return toUpper(std::format("{:x}", input));
+	return "0x" + toUpper(std::format("{:x}", input));
 }

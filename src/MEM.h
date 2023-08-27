@@ -17,6 +17,11 @@ template<uint8_t P> constexpr bool IsByteAligned()
 	return 8 % P == 0;
 }
 
+template<int> struct ReturnSize;
+template<> struct ReturnSize<1> { using Type = uint8_t; };
+template<> struct ReturnSize<2> { using Type = uint16_t; };
+template<> struct ReturnSize<4> { using Type = uint32_t; };
+
 class Memory
 {
 public:
@@ -73,28 +78,29 @@ public:
 #endif
 
 public:
-	template<Type PtrLoc = DefaultType>
-	uint8_t DirectReadByte(Ptr offset, ErrorCode& e)
+	template<Type DataLoc = DefaultType, uint8_t Bytes = 1>
+	ReturnSize<Bytes>::Type DirectReadBytes(Ptr offset, ErrorCode& e)
 	{
-		if (!AdressableRangeCheck(GetLwrBnd<PtrLoc>() + offset, e))
+		if (!AdressableRangeCheck(GetLwrBnd<DataLoc>() + offset + Bytes, e))
 		{
 			e.flag |= (int)ErrorFlags::INVALID_READ | (int)ErrorFlags::INVALID_ARGUMENT;
-			SetMemSectionFlag<PtrLoc>(e);
+			SetMemSectionFlag<DataLoc>(e);
 			return 0;
 		}
-		CheckMemUpper(GetUprBnd<PtrLoc>(), GetLwrBnd<PtrLoc>() + offset, e);
+		CheckMemUpper(GetUprBnd<DataLoc>(), GetLwrBnd<DataLoc>() + offset + Bytes, e);
 		if (e.flag & (int)ErrorFlags::MEM_OUT_OF_BOUND)
 		{
 			e.flag |= (int)ErrorFlags::INVALID_READ;
-			SetMemSectionFlag<PtrLoc>(e);
+			SetMemSectionFlag<DataLoc>(e);
 			SetDebugMsg(e, "Memory read through DirectReadByte out of bound.\n"
 				"Read attepmpt at offset " + toHexStr(offset) +
-				".\nNote tht valid memory locations for " + GetName<PtrLoc>() + " are 0 to: " +
-				toHexStr(GetUprBnd<PtrLoc>() - GetLwrBnd<PtrLoc>()));
+				".\nNote tht valid memory locations for " + GetName<DataLoc>() + " are 0 to: " +
+				toHexStr(GetUprBnd<DataLoc>() - GetLwrBnd<DataLoc>()));
 			return 0;
 		}
+		uint16_t value = JoinBytes<DataLoc, Bytes>(offset);
 		SetDebugMsg(e, "Operation succeeded");
-		return m_Memory->at(GetLwrBnd<PtrLoc>() + offset);
+		return value;
 	}
 
 	template<Type DataLoc = DefaultType>
