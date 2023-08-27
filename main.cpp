@@ -13,8 +13,6 @@
 #include "CPU.h"
 #include "Opcodes.h"
 
-#include "Error.h"
-
 #include "MEM.h"
 
 void test()
