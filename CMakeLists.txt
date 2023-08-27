@@ -40,7 +40,7 @@ file(GLOB source_files CONFIGURE_DEPENDS
         "src/imgooey/*.h"
         "src/imgooey/*.cpp"
         )
-
+            
 #set(DUMB_DIR src/mainfiles)
 #file (GLOB_RECURSE retarded_dir_files CMAKE_CONFIGURE_DEPENDS
 #        ${DUMB_DIR}/*.h
@@ -59,6 +59,7 @@ add_executable(${PROJECT_NAME} ${source_files} "src/Error.h" "src/Util.cpp" "src
 #find_file(D3D11 d3d11.lib "C:\Program Files (x86)\Windows Kits\10\Lib\10.0.22000.0\um\x64")
 target_link_libraries(${PROJECT_NAME} ${D3D11} d3d11.lib d3d11 dxguid imgui)
 
+ set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
     set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
