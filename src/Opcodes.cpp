@@ -8,7 +8,7 @@ NOP::NOP()
 	m_name = "NOP"; m_size = 1; m_cycle_duration = 4; 
 }
 
-std::string NOP::to_string(CPU* cpu, Memory* mem)
+std::string NOP::disassemble_to_string(CPU* cpu, Memory* mem)
 {
 	return "NOP";
 }
@@ -23,7 +23,7 @@ LXI::LXI(Registers reg)
 	m_name = "LXI"; m_size = 2; m_cycle_duration = 10; m_reg = (int)reg;
 }
 
-std::string LXI::to_string(CPU* cpu, Memory* mem)
+std::string LXI::disassemble_to_string(CPU* cpu, Memory* mem)
 {
 	return "LXI " + CPU::RegToStr(m_reg) + ", " + toHexStr(mem->JoinBytes(cpu->PC));
 }
@@ -39,7 +39,7 @@ LDA::LDA(Registers reg)
 	m_name = "LDA"; m_size = NULL; m_cycle_duration = 4; m_reg = (int)reg; 
 }
 
-std::string LDA::to_string(CPU* cpu, Memory* mem)
+std::string LDA::disassemble_to_string(CPU* cpu, Memory* mem)
 {
     return "LDA " + CPU::RegToStr(m_reg) + ", " + toHexStr(mem->JoinBytes(cpu->PC));
 }
@@ -47,7 +47,7 @@ std::string LDA::to_string(CPU* cpu, Memory* mem)
 void LDA::execute(CPU* cpu, Memory* mem)
 {
     LastError.Clear();
-    cpu->A = mem->IndirectReadByte(cpu->PC, LastError);
+    cpu->A = mem->IndirectReadBytes(cpu->PC, LastError);
 }
 
 
@@ -59,7 +59,7 @@ STAX::STAX(Registers reg)
     m_reg = (int)reg;
 }
 
-std::string STAX::to_string(CPU* cpu, Memory* mem)
+std::string STAX::disassemble_to_string(CPU* cpu, Memory* mem)
 {
     return "STAX " + CPU::RegToStr(m_reg);
 }
@@ -70,10 +70,10 @@ void STAX::execute(CPU* cpu, Memory* mem)
     switch (m_reg)
     {
     case (int)Registers::BC:
-        mem->DirectWriteByte(cpu->BC, cpu->A, LastError);
+        mem->DirectWriteBytes(cpu->BC, cpu->A, LastError);
         break;
     case (int)Registers::DE:
-        mem->DirectWriteByte(cpu->DE, cpu->A, LastError);
+        mem->DirectWriteBytes(cpu->DE, cpu->A, LastError);
         break;
     default:
         printf("STAX Register was incorrect >:(\n");
@@ -89,7 +89,7 @@ SHLD::SHLD(Registers reg)
     m_reg = (int)reg;
 }
 
-std::string SHLD::to_string(CPU* cpu, Memory* mem)
+std::string SHLD::disassemble_to_string(CPU* cpu, Memory* mem)
 {
     return "SHLD " + CPU::RegToStr(m_reg) + ", " + toHexStr(mem->JoinBytes(cpu->PC));
 }
@@ -98,8 +98,8 @@ void SHLD::execute(CPU* cpu, Memory* mem)
 {
     LastError.Clear();
     uint16_t adr = mem->JoinBytes(cpu->PC);
-    mem->DirectWriteByte(adr, cpu->L, LastError);
-    mem->DirectWriteByte(adr + 1, cpu->L, LastError);
+    mem->DirectWriteBytes(adr, cpu->L, LastError);
+    mem->DirectWriteBytes(adr + 1, cpu->L, LastError);
 }
 
 STA::STA()
@@ -109,7 +109,7 @@ STA::STA()
     m_cycle_duration = 13;
 }
 
-std::string STA::to_string(CPU* cpu, Memory* mem)
+std::string STA::disassemble_to_string(CPU* cpu, Memory* mem)
 {
     return "STA " + toHexStr(mem->JoinBytes(cpu->PC));
 }
@@ -118,7 +118,7 @@ void STA::execute(CPU* cpu, Memory* mem)
 {
     LastError.Clear();
     uint16_t adr = mem->JoinBytes(cpu->PC);
-    mem->DirectWriteByte(adr, cpu->A, LastError);
+    mem->DirectWriteBytes(adr, cpu->A, LastError);
 }
 
 LDAX::LDAX(Registers reg)
@@ -129,7 +129,7 @@ LDAX::LDAX(Registers reg)
     m_reg = (int)reg;
 }
 
-std::string LDAX::to_string(CPU* cpu, Memory* mem)
+std::string LDAX::disassemble_to_string(CPU* cpu, Memory* mem)
 {
     return "LDAX " + CPU::RegToStr(m_reg);
 }
@@ -139,10 +139,10 @@ void LDAX::execute(CPU* cpu, Memory* mem)
     switch (m_reg)
     {
     case (int)Registers::BC:
-        cpu->A = cpu->BC;
+        cpu->A = (uint8_t)cpu->BC;
         break;
     case (int)Registers::DE:
-        cpu->A = cpu->DE;
+        cpu->A = (uint8_t)cpu->DE;
         break;
     }
 }
@@ -155,7 +155,7 @@ INX::INX(Registers reg)
     m_reg = (int)reg;
 }
 
-std::string INX::to_string(CPU* cpu, Memory* mem)
+std::string INX::disassemble_to_string(CPU* cpu, Memory* mem)
 {
     return "INX " + CPU::RegToStr(m_reg);
 }

@@ -2,7 +2,7 @@
 
 Memory::Memory()
 {
-	m_Memory = new std::array<uint8_t, TotalAdrSpaceUprBnd>();
+	m_Memory = new uint8_t[TotalAdrSpaceUprBnd];
 }
 
 Memory::~Memory()
@@ -27,7 +27,7 @@ bool Memory::AdressableRangeCheck(int p, ErrorCode& e)
 	if (p > TotalAdrSpaceUprBnd)
 	{
 		e.flag |= (int)ErrorFlags::MEM_OUT_OF_BOUND;
-		SetDebugMsg(e, 
+		SetDebugECMsg(e, 
 			"Invalid argument to IndirectReadBytes. Offset outside of total addressable range");
 		return false;
 	}
@@ -36,6 +36,6 @@ bool Memory::AdressableRangeCheck(int p, ErrorCode& e)
 
 void Memory::Reset()
 {
-	for (auto& i : *m_Memory) { i = 0x00; }
+	for (uint16_t i = 0; i < TotalAdrSpaceUprBnd; i++) { i = 0x00; }
 	//memset() is the equivelant alternative for this
 }

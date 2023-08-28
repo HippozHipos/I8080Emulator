@@ -19,7 +19,7 @@ public:
 	void draw_emulator_screen();
 
 private:
-	std::array<uint8_t, 0xFFFF>* m_Memory;
+	std::array<uint8_t, 0xFFFF>* m_Memory = nullptr;
 	MemoryEditor m_CPU_Ram_Memory;
 };
 

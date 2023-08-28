@@ -11,12 +11,13 @@ enum class ErrorFlags : int
 	MEMORY_SECTION_ROM = 1 << 5,
 	MEMORY_SECTION_STACK = 1 << 6,
 	MEMORY_SECTION_VRAM = 1 << 7,
-	MEMORY_SECTION_ALL = 1 << 8
+	MEMORY_SECTION_ALL = 1 << 8,
+	INVALID_POINTER = 1 << 9
 };
 
 struct ErrorCode
 {
-	int flag;
+	int flag = 0;
 	void Clear();
 #if defined(DEBUG) || defined(_DEBUG)
 	std::string msg;
@@ -25,8 +26,8 @@ struct ErrorCode
 
 
 #if defined(DEBUG) || defined(_DEBUG)
-#define SetDebugMsg(e, ...) e.msg = __VA_ARGS__
-#define PrintDebugMsg(e) std::cout << e.msg << '\n';
+#define SetDebugECMsg(e, ...) e.msg = __VA_ARGS__
+#define PrintDebugECMsg(e) std::cout << e.msg << '\n';
 #else
 #define SetDebugStringMsg(...) 
 #define PrintDebugMsg(e) 

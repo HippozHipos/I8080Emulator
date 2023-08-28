@@ -36,3 +36,11 @@ void MemoryViewer::draw_memory_viewer()
 {
 	m_CPU_Ram_Memory.DrawWindow("RAM", m_Memory->data(), 0xFFFF);
 }
+
+void MemoryViewer::draw_debugger()
+{
+}
+
+void MemoryViewer::draw_emulator_screen()
+{
+}

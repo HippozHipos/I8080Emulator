@@ -24,7 +24,7 @@ void CPU::execute_opcode(std::shared_ptr<opcode> cur_op, Memory* mem)
 
 std::string CPU::RegToStr(int r)
 {
-	const char* reg[] = { "A", "B", "C", "BC", "D", "E", "DE", "H", "L", "HL", "SP" };
+	static const char* reg[] = { "A", "B", "C", "BC", "D", "E", "DE", "H", "L", "HL", "SP" };
 	return reg[r];
 }
 

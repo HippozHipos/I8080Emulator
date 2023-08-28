@@ -16,16 +16,13 @@
 #include "MEM.h"
 
 void test()
-{	
-	Memory mem;
+{
 	ErrorCode e;
-	mem.DirectWriteByte < Memory::Type::RAM>(0x200, 1, e);
-	mem.DirectWriteByte< Memory::Type::RAM>(0x201, 2, e);
-	std::cout << mem.DirectReadBytes<Memory::Type::RAM, 2>(0x200, e) << '\n';
-	PrintDebugMsg(e);
+
+	Memory mem;
 	CPU cpu;
 	std::shared_ptr<opcode> currentOpcode = std::make_shared<LXI>(Registers::A);
-	std::cout << currentOpcode->to_string(&cpu, &mem) << '\n';
+	std::cout << currentOpcode->disassemble_to_string(&cpu, &mem) << '\n';
 	cpu.execute_opcode(currentOpcode, &mem);
 }
 
@@ -37,5 +34,3 @@ int main()
 	app->Run();
 	delete app;
 }
-
-

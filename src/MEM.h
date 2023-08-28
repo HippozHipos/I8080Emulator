@@ -8,19 +8,18 @@
 
 #include "util.h"
 
-#ifndef I8080_32BIT_MEM
-	//#define I8080_32BIT_MEM
-#endif
-
 template<uint8_t P> constexpr bool IsByteAligned()
 {
 	return 8 % P == 0;
 }
 
-template<int> struct ReturnSize;
-template<> struct ReturnSize<1> { using Type = uint8_t; };
-template<> struct ReturnSize<2> { using Type = uint16_t; };
-template<> struct ReturnSize<4> { using Type = uint32_t; };
+template<uint8_t> struct ByteSize;
+template<> struct ByteSize<1> { using Type = uint8_t; };
+template<> struct ByteSize<2> { using Type = uint16_t; };
+template<> struct ByteSize<4> { using Type = uint32_t; };
+
+//probably will never be used. uncomment if needed
+//template<> struct ByteSize<8> { using Type = uint64_t; }; 
 
 class Memory
 {
@@ -40,29 +39,10 @@ public:
 
 public:
 	static constexpr Type DefaultType = Type::ALL;
-#ifdef I8080_32BIT_MEM
-	using Ptr = uint32_t;
-	static constexpr uint8_t DefaultBytes = 4;
-#else
 	using Ptr = uint16_t;
 	static constexpr uint8_t DefaultBytes = 2;
-#endif
 
 public:
-#ifdef I8080_32BIT_MEM
-	static constexpr int TotalAdrSpaceLwrBnd = 0x000000;
-	static constexpr int TotalAdrSpaceUprBnd = 0xFFFFFF;
-
-	static constexpr int ROMLwrBnd = 0x000000;
-	static constexpr int ROMUprBnd = 0x199998, RAMLwrBnd = 0x200000;
-
-	static constexpr int StackLwrBnd = 0x230000;
-
-	static constexpr int RAMUprBnd = 0x239998, VRAMLwrBnd = 0x240000, StackUprBnd = 0x239998;
-	static constexpr int VRAMUprBnd = 0x400000, UnusedLwrBnd = 0x400000;
-
-	static constexpr int UnusedUprBnd = TotalAdrSpaceUprBnd;
-#else
 	static constexpr int TotalAdrSpaceLwrBnd = 0x0000;
 	static constexpr int TotalAdrSpaceUprBnd = 0xFFFF;
 
@@ -75,11 +55,12 @@ public:
 	static constexpr int VRAMUprBnd = 0x4000, UnusedLwrBnd = 0x4000;
 
 	static constexpr int UnusedUprBnd = TotalAdrSpaceUprBnd;
-#endif
 
 public:
-	template<Type DataLoc = DefaultType, uint8_t Bytes = 1>
-	ReturnSize<Bytes>::Type DirectReadBytes(Ptr offset, ErrorCode& e)
+	//DataLoc: Which memory section to read the data from
+	//Bytes: How many bytes to read - can only be 1, 2, or 4, could add 64 if wanted not dont see need
+	template<uint8_t Bytes = 1, Type DataLoc = DefaultType>
+	ByteSize<Bytes>::Type DirectReadBytes(Ptr offset, ErrorCode& e)
 	{
 		if (!AdressableRangeCheck(GetLwrBnd<DataLoc>() + offset + Bytes, e))
 		{
@@ -92,17 +73,18 @@ public:
 		{
 			e.flag |= (int)ErrorFlags::INVALID_READ;
 			SetMemSectionFlag<DataLoc>(e);
-			SetDebugMsg(e, "Memory read through DirectReadByte out of bound.\n"
+			SetDebugECMsg(e, "Memory read through DirectReadByte out of bound.\n"
 				"Read attepmpt at offset " + toHexStr(offset) +
-				".\nNote tht valid memory locations for " + GetName<DataLoc>() + " are 0 to: " +
+				".\nNote tht valid memory locations for " + GetName<DataLoc>() + " are 0x00 to " +
 				toHexStr(GetUprBnd<DataLoc>() - GetLwrBnd<DataLoc>()));
 			return 0;
 		}
-		uint16_t value = JoinBytes<DataLoc, Bytes>(offset);
-		SetDebugMsg(e, "Operation succeeded");
+		typename ByteSize<Bytes>::Type value = JoinBytes<Bytes, DataLoc>(offset);
+		SetDebugECMsg(e, "Operation succeeded");
 		return value;
 	}
 
+	//DataLoc: Which memory section to get raw pointer from
 	template<Type DataLoc = DefaultType>
 	uint8_t* GetRawPtr(Ptr offset, ErrorCode& e)
 	{
@@ -110,79 +92,41 @@ public:
 		{
 			e.flag |= (int)ErrorFlags::INVALID_READ | (int)ErrorFlags::INVALID_ARGUMENT;
 			SetMemSectionFlag<DataLoc>(e);
-			return 0;
+			return nullptr;
 		}
 		CheckMemUpper(GetUprBnd<DataLoc>(), GetLwrBnd<DataLoc>() + offset, e);
 		if (e.flag & (int)ErrorFlags::MEM_OUT_OF_BOUND)
 		{
 			e.flag |= (int)ErrorFlags::INVALID_READ;
 			SetMemSectionFlag<DataLoc>(e);
-			SetDebugMsg(e, "Memory read through DirectReadByte out of bound.\n"
+			SetDebugECMsg(e, "Memory read through DirectReadByte out of bound.\n"
 				"Read attepmpt at offset " + toHexStr(offset) +
-				".\nNote tht valid memory locations for " + GetName<DataLoc>() + " are 0 to: " +
+				".\nNote tht valid memory locations for " + GetName<DataLoc>() + " are 0x00 to " +
 				toHexStr(GetUprBnd<DataLoc>() - GetLwrBnd<DataLoc>()));
-			return 0;
+			return nullptr;
 		}
-		SetDebugMsg(e, "Operation succeeded");
-		return m_Memory->data() + GetLwrBnd<DataLoc>() + offset;
+		SetDebugECMsg(e, "Operation succeeded");
+		return m_Memory + GetLwrBnd<DataLoc>() + offset;
 	}
 
-	template<Type PtrLoc = DefaultType, Type DataLoc = DefaultType, uint8_t Bytes = DefaultBytes>
-	uint8_t IndirectReadByte(Ptr offset, ErrorCode& e)
+
+	//PtrLoc: Which memory section to read the pointer from
+	//DataLoc: Which memory section to read Data from
+	//PtrBytes: How many bytes is the pointer
+	//DataBytes: How many byes of data to read - can be 1, 2 or 4
+	template<uint8_t PtrBytes = DefaultBytes, uint8_t DataBytes = 1, Type PtrLoc = DefaultType, Type DataLoc = DefaultType>
+	ByteSize<DataBytes>::Type IndirectReadBytes(Ptr offset, ErrorCode& e)
 	{
-		if (!AdressableRangeCheck(GetLwrBnd<PtrLoc>() + offset + (Bytes - 1), e))
-		{
-			e.flag |= (int)ErrorFlags::INVALID_READ | (int)ErrorFlags::INVALID_ARGUMENT;
-			SetMemSectionFlag<PtrLoc>(e);
-			return 0;
-		}
-
-		//2 is the upper limit for now since we are doing 16 bits rn, if we later expand to 32 bits, can set to 4
-#ifdef I8080_32BIT_MEM
-		if constexpr (!IsByteAligned<Bytes>() || Bytes > 4 || Bytes < 1)
-#else
-		if constexpr (!IsByteAligned<Bytes>() || Bytes > 2 || Bytes < 1)
-#endif
-		{
-			e.flag |= (int)ErrorFlags::INVALID_READ | (int)ErrorFlags::INVALID_ARGUMENT;
-			SetMemSectionFlag<PtrLoc>(e);
-			SetDebugMsg(e, "Invalid argument to IndirectReadBytes. Bytes cannot be " + 
-				std::to_string(Bytes));
-			return 0;
-		}
-
-		CheckMemUpper(GetUprBnd<PtrLoc>(), GetLwrBnd<PtrLoc>() + offset + (Bytes - 1), e);
-		if (e.flag & (int)ErrorFlags::MEM_OUT_OF_BOUND)
-		{
-			e.flag |= (int)ErrorFlags::INVALID_READ;
-			SetMemSectionFlag<PtrLoc>(e);
-			SetDebugMsg(e, "Memory read through IndirectReadBytes out of bound.\n"
-				"Reading " + std::to_string(Bytes) + " bytes from offset " + toHexStr(offset) +
-				".\nNote tht valid memory locations for " + GetName<PtrLoc>() + " are 0 to: " +
-				toHexStr(GetUprBnd<DataLoc>() - GetLwrBnd<DataLoc>()));
-			return 0;
-		}
-		Ptr index = JoinBytes<PtrLoc, Bytes>(offset);
-		CheckMemUpper(GetUprBnd<PtrLoc>(), index, e);
-		if (e.flag & (int)ErrorFlags::MEM_OUT_OF_BOUND)
-		{
-			e.flag |= (int)ErrorFlags::INVALID_READ;
-			SetMemSectionFlag<DataLoc>(e);
-			SetDebugMsg(e, "Memory read through IndirectReadBytes out of bound.\n" 
-				"Reading " + std::to_string(Bytes) + " bytes of combined address from offset " + toHexStr(offset) +
-				" succeeded\n. The memory location is " + toHexStr(index) +
-				". However, this memory location is invalid for " + GetName<DataLoc>() +
-				".\nValid locations are: 0" +  + " to " + 
-				toHexStr(GetUprBnd<DataLoc>() - GetLwrBnd<DataLoc>()));
-			return 0;
-		}
-
-		SetDebugMsg(e, "Operation succeeded");
-		return m_Memory->at(GetLwrBnd<DataLoc>() + index);
+		typename ByteSize<PtrBytes>::Type adr = DirectReadBytes<PtrBytes, PtrLoc>(offset, e);
+		typename ByteSize<DataBytes>::Type data = DirectReadBytes<DataBytes, DataLoc>(adr, e);
+		return data;
 	}
 
-	template<Type DataLoc = DefaultType>
-	void DirectWriteByte(Ptr offset, uint8_t data, ErrorCode& e)
+	//DataLoc: Which memory section to write data to
+	//Bytes: How many bytes to write,
+	//in this case 1 will mean you give a data of type uint8_t, 2 of uint16_t and 4 of uint32_t
+	template<uint8_t Bytes = 1, Type DataLoc = DefaultType>
+	void DirectWriteBytes(Ptr offset, ByteSize<Bytes>::Type data, ErrorCode& e)
 	{
 		if (!AdressableRangeCheck(GetLwrBnd<DataLoc>() + offset, e))
 		{
@@ -195,35 +139,82 @@ public:
 		{
 			e.flag |= (int)ErrorFlags::INVALID_WRITE;
 			SetMemSectionFlag<DataLoc>(e);
-			SetDebugMsg(e, "Memory write through DirectWriteByte out of bound.\n" 
+			SetDebugECMsg(e, "Memory write through DirectWriteByte out of bound.\n" 
 				"Write attepmpt at offset " + toHexStr(offset) +
-				".\nNote tht valid memory locations for " + GetName<DataLoc>() + " are 0 to: " +
+				".\nNote tht valid memory locations for " + GetName<DataLoc>() + " are 0x00 to " +
 				toHexStr(GetUprBnd<DataLoc>() - GetLwrBnd<DataLoc>()));
 			return;
 		}
-		SetDebugMsg(e, "Operation succeeded");
-		m_Memory->data()[GetLwrBnd<DataLoc>() + offset] = data;
+		memcpy(m_Memory + GetLwrBnd<DataLoc>() + offset, &data, Bytes);
+		SetDebugECMsg(e, "Operation succeeded");
 	}
 
-	template<Type DataLoc = DefaultType, uint8_t Bytes = DefaultBytes>
-	Ptr JoinBytes(Ptr offset)
+	//WRITE ANY NUMBER OF BYTES OF DATA. NOT TESTED, TEST BEFORE USE
+	template<Type DataLoc = DefaultType>
+	void DirectWriteBytes(Ptr offset, uint8_t* data, Ptr bytes, ErrorCode& e)
 	{
-		Ptr index = 0;
-		uint8_t i = Bytes;
-		Ptr totalOffset = GetLwrBnd<DataLoc>() + offset;
-		do
+		if (!AdressableRangeCheck(GetLwrBnd<DataLoc>() + offset + bytes, e))
 		{
-			if constexpr (Bytes == 1)
-			{
-				index = m_Memory->at(totalOffset);
-				break;
-			}
-			index = (index << (8 * (Bytes / 2))) | m_Memory->at(totalOffset + i - 1);
-			i--;
-		} while (i > 0);
-		return index;
+			e.flag |= (int)ErrorFlags::INVALID_READ | (int)ErrorFlags::INVALID_ARGUMENT;
+			SetMemSectionFlag<DataLoc>(e);
+			return;
+		}
+		CheckMemUpper(GetUprBnd<DataLoc>(), GetLwrBnd<DataLoc>() + offset + bytes, e);
+		if (e.flag & (int)ErrorFlags::MEM_OUT_OF_BOUND)
+		{
+			e.flag |= (int)ErrorFlags::INVALID_WRITE;
+			SetMemSectionFlag<DataLoc>(e);
+			SetDebugECMsg(e, "Memory write through DirectWriteByte out of bound.\n"
+				"Write attepmpt at offset " + toHexStr(offset) +
+				".\nNote tht valid memory locations for " + GetName<DataLoc>() + " are 0x00 to " +
+				toHexStr(GetUprBnd<DataLoc>() - GetLwrBnd<DataLoc>()));
+			return;
+		}
+		memcpy(m_Memory + GetLwrBnd<DataLoc>() + offset, data, bytes);
+		SetDebugECMsg(e, "Operation succeeded");
 	}
 
+	//Which data loc is the byte located in 
+	//How many bytes to join
+	//join the bytes in reverse order?
+	template<uint8_t Bytes = DefaultBytes, Type DataLoc = DefaultType, bool Reverse = true>
+	ByteSize<Bytes>::Type JoinBytes(Ptr offset)
+	{
+		if constexpr (Bytes == 1)
+		{
+			return m_Memory[GetLwrBnd<DataLoc>() + offset];
+		}
+
+		typename ByteSize<Bytes>::Type index = 0;
+		if constexpr (Reverse)
+		{
+			uint8_t i = Bytes;
+			typename ByteSize<Bytes>::Type totalOffset = GetLwrBnd<DataLoc>() + offset;
+			do
+			{
+				index = (index << (8 * (Bytes / 2))) | m_Memory[totalOffset + i - 1];
+				i--;
+			} while (i > 0);
+			return index;
+		}
+		else
+		{
+			uint8_t i = 0;
+			typename ByteSize<Bytes>::Type totalOffset = GetLwrBnd<DataLoc>() + offset;
+			do
+			{
+				if constexpr (Bytes == 1)
+				{
+					index = m_Memory[totalOffset];
+					break;
+				}
+				index = (index << (8 * (Bytes / 2))) | m_Memory[totalOffset + i];
+				i++;
+			} while (i < Bytes);
+			return index;
+		}
+	}
+	
 	void	Reset();
 
 private:
@@ -272,6 +263,6 @@ private:
 	}
 
 private:
-	std::array<uint8_t, TotalAdrSpaceUprBnd>* m_Memory;
+	uint8_t* m_Memory;
 };
 

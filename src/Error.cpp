@@ -3,5 +3,5 @@
 void ErrorCode::Clear()
 {
 	flag = 0;
-	SetDebugMsg((*this), "");
+	msg.clear();
 }
