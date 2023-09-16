@@ -12,7 +12,10 @@ enum class ErrorFlags : int
 	MEMORY_SECTION_STACK = 1 << 6,
 	MEMORY_SECTION_VRAM = 1 << 7,
 	MEMORY_SECTION_ALL = 1 << 8,
-	INVALID_POINTER = 1 << 9
+	INVALID_POINTER = 1 << 9,
+
+	//cpu errors
+	INVALID_REGISTER_CALL = 1 << 10
 };
 
 struct ErrorCode

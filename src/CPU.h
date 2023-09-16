@@ -8,6 +8,7 @@
 #include <memory>
 
 #include "Timer.h"
+//#include "Opcodes.h"
 
 //forward declaration
 struct opcode;
@@ -30,10 +31,13 @@ enum class Registers : int
 
 class CPU
 {
+	//make private and accesible with the public methods from opcodes. Leave public for now for testing?
 public:
 	// Main Registers
 	//Registers B, C, D, E, H, L are 8 bits, but can be combined into 3 16 bit registers
 	uint8_t A; //Accumulator
+
+	//The A register is used to store the result of operations, whilst the other 6 registers are often used in 16-bit pairs B-C D-E H-L
 
 	union
 	{
@@ -88,9 +92,12 @@ public:
 
 	static constexpr int ProcesserFrequency = 2000000; // 2_000_000 or 2 Mhz
 
+	FLAGS flags;
+
 public:
 	void load_register_value(Registers reg, uint8_t* value);
-	void execute_opcode(std::shared_ptr<opcode> cur_op, Memory* mem);
+	void execute_opcode(uint16_t index, Memory* mem);
+	void setFlags(uint16_t reg, uint16_t reg2 = 0);
 
 public:
 	static std::string RegToStr(int r);
@@ -100,5 +107,12 @@ public:
 	static constexpr bool LimitCycles = true;
 
 private:
+	void InitOpcodeTable();
+
+private:
+	ErrorCode cpu_LastError;
 	Timer timer;
+	//this is done to avoid using a constructor/destructor, and thus we just call the functions themselves. 
+	//if opcode* is used, we would need to use a constructor and destructor to avoid memory leaks
+	std::shared_ptr<opcode> opcodeLookup[255]; //this equiveleant to opcode* opcodeLookup[255]
 };

@@ -14,11 +14,15 @@ struct opcode
 	uint8_t m_size = 0;
 	uint8_t m_cycle_duration = 0;
 
+	//prints string to console, by taking the hex and figuring out which instruction it is.
 	virtual std::string disassemble_to_string(CPU* cpu, Memory* mem) = 0;
-	virtual void execute(CPU* cpu, Memory* mem) = 0;
+	//executes the real instruction into the emulators memory
+	virtual void execute(CPU* cpu, Memory* mem) = 0; 
 
 	virtual ~opcode() = default;
 	static ErrorCode LastError;
+
+	int m_reg = -1;
 };
 
 struct NOP : public opcode
@@ -34,7 +38,6 @@ struct LXI : public opcode
 	std::string disassemble_to_string(CPU* cpu, Memory* mem) override;
 	void execute(CPU* cpu, Memory* mem) override;
 
-	int m_reg;
 };
 
 struct LDA : public opcode
@@ -88,5 +91,42 @@ struct INX : public opcode
 
 	int m_reg;
 };
+
+struct ADD : public opcode
+{
+	ADD(Registers reg);
+	std::string disassemble_to_string(CPU* cpu, Memory* mem) override;
+	void execute(CPU* cpu, Memory* mem) override;
+
+	int m_reg;
+};
+
+struct INR : public opcode
+{
+	INR(Registers reg);
+	std::string disassemble_to_string(CPU* cpu, Memory* mem) override;
+	void execute(CPU* cpu, Memory* mem) override;
+
+	int m_reg;
+};
+
+struct DCX : public opcode
+{
+	DCX(Registers reg);
+	std::string disassemble_to_string(CPU* cpu, Memory* mem) override;
+	void execute(CPU* cpu, Memory* mem) override;
+
+	int m_reg;
+};
+
+struct DCR : public opcode
+{
+	DCR(Registers reg);
+	std::string disassemble_to_string(CPU* cpu, Memory* mem) override;
+	void execute(CPU* cpu, Memory* mem) override;
+
+	int m_reg;
+};
+
 
 #endif // OPCODE_H

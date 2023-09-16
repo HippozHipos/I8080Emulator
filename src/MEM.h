@@ -59,9 +59,12 @@ public:
 public:
 	//DataLoc: Which memory section to read the data from
 	//Bytes: How many bytes to read - can only be 1, 2, or 4, could add 64 if wanted not dont see need
+	//we are template specialising in ByteSize<Bytes>::Type, currently this is being resolved to ByteSize<1> -> ByteSize<uint8_t>
+	//DataLoc -> DefaultType -> Type::ALL -> we have full address scope of memory.
 	template<uint8_t Bytes = 1, Type DataLoc = DefaultType>
 	ByteSize<Bytes>::Type DirectReadBytes(Ptr offset, ErrorCode& e)
 	{
+		//if the memory we are trying to access is outside of the addressable range, 
 		if (!AdressableRangeCheck(GetLwrBnd<DataLoc>() + offset + Bytes, e))
 		{
 			e.flag |= (int)ErrorFlags::INVALID_READ | (int)ErrorFlags::INVALID_ARGUMENT;
