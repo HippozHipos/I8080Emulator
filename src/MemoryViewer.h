@@ -13,7 +13,7 @@ public:
 
 public:
 	void setup(std::array<uint8_t, 0xFFFF>* ram);
-
+	//void setup(uint8_t** ram);
 	void draw_memory_viewer();
 	void draw_debugger();
 	void draw_emulator_screen();

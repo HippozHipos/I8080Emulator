@@ -14,6 +14,22 @@ static void setFlags(CPU* cpu, uint16_t reg, uint16_t reg2 = 0)
 }
 */
 
+static void setZ(CPU* cpu, uint16_t a) 
+{
+    cpu->flags.Z = (a == 0) & 1;  // Set Z flag to 1 if reg is zero, else 0
+}
+static void setS(CPU* cpu, uint16_t a)
+{   //0x80 is 128 which is the halfway point for a 8bit number, which means it acts as 0.
+    cpu->flags.S = (a > 0x80) & 1;   // Set S flag to 1 if A is positive, else 0
+}
+static void setC(CPU* cpu, uint16_t reg, uint16_t reg2 = 0)
+{
+    cpu->flags.C = (((uint16_t)reg + reg2) > 0xff) & 1; //set C flag to 1 if the result of the operation is going to be too big to fit in the register
+}
+static void setP(CPU* cpu, uint16_t reg)
+{
+    cpu->flags.P = ((__popcnt(reg) % 2) == 0) & 1; //set the Parity flag to 1 if number of bits is even, 0 if odd
+}
 
 static uint8_t ac_flagADD(uint8_t a, uint8_t b)
 {
@@ -95,10 +111,12 @@ void STAX::execute(CPU* cpu, Memory* mem)
     switch (m_reg)
     {
     case (int)Registers::BC:
-        mem->DirectWriteBytes(cpu->BC, cpu->A, LastError);
+        //mem->DirectWriteBytes(cpu->BC, cpu->A, LastError);
+        cpu->BC = cpu->A;
         break;
     case (int)Registers::DE:
-        mem->DirectWriteBytes(cpu->DE, cpu->A, LastError);
+        //mem->DirectWriteBytes(cpu->DE, cpu->A, LastError);
+        cpu->DE = cpu->A;
         break;
     default:
         printf("STAX Register was incorrect >:(\n");
@@ -271,8 +289,8 @@ void ADD::execute(CPU* cpu, Memory* mem)
         cpu->flags.Z = (cpu->A == 0) & 1;  // Set Z flag to 1 if A is zero, else 0
         cpu->flags.S = (cpu->A > 0) & 1;   // Set S flag to 1 if A is positive, else 0
         cpu->flags.C = (  ((uint16_t)cpu->A + cpu->B) > 0xff) & 1; //set C flag to 1 if the result of the operation is going to be too big to fit in the register
-        cpu->flags.P = (  (std::popcount(cpu->A) % 2) == 0) & 1; //set the Parity flag to 1 if number of bits is even, 0 if odd
-        cpu->flags.AC = ac_flagADD(cpu->A, cpu->B);
+        cpu->flags.P = (  (__popcnt(cpu->A) % 2) == 0) & 1; //set the Parity flag to 1 if number of bits is even, 0 if odd
+        //cpu->flags.AC = ac_flagADD(cpu->A, cpu->B);
         break;
     case (int)Registers::C:
         cpu->A += cpu->C;

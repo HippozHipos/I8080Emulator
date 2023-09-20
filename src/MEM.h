@@ -38,7 +38,7 @@ public:
 	};
 
 public:
-	static constexpr Type DefaultType = Type::ALL;
+	static constexpr Type DefaultType = Type::RAM; 
 	using Ptr = uint16_t;
 	static constexpr uint8_t DefaultBytes = 2;
 
@@ -109,7 +109,8 @@ public:
 			return nullptr;
 		}
 		SetDebugECMsg(e, "Operation succeeded");
-		return m_Memory + GetLwrBnd<DataLoc>() + offset;
+		return m_Memory.data() + GetLwrBnd<DataLoc>() + offset;
+		//return m_Memory + GetLwrBnd<DataLoc>() + offset;
 	}
 
 
@@ -129,26 +130,27 @@ public:
 	//Bytes: How many bytes to write,
 	//in this case 1 will mean you give a data of type uint8_t, 2 of uint16_t and 4 of uint32_t
 	template<uint8_t Bytes = 1, Type DataLoc = DefaultType>
-	void DirectWriteBytes(Ptr offset, ByteSize<Bytes>::Type data, ErrorCode& e)
+	void DirectWriteBytes(Ptr offsetWritingTo, ByteSize<Bytes>::Type dataToWrite, ErrorCode& e)
 	{
-		if (!AdressableRangeCheck(GetLwrBnd<DataLoc>() + offset, e))
+		if (!AdressableRangeCheck(GetLwrBnd<DataLoc>() + offsetWritingTo, e))
 		{
 			e.flag |= (int)ErrorFlags::INVALID_READ | (int)ErrorFlags::INVALID_ARGUMENT;
 			SetMemSectionFlag<DataLoc>(e);
 			return;
 		}
-		CheckMemUpper(GetUprBnd<DataLoc>(), GetLwrBnd<DataLoc>() + offset, e);
+		CheckMemUpper(GetUprBnd<DataLoc>(), GetLwrBnd<DataLoc>() + offsetWritingTo, e);
 		if (e.flag & (int)ErrorFlags::MEM_OUT_OF_BOUND)
 		{
 			e.flag |= (int)ErrorFlags::INVALID_WRITE;
 			SetMemSectionFlag<DataLoc>(e);
 			SetDebugECMsg(e, "Memory write through DirectWriteByte out of bound.\n" 
-				"Write attepmpt at offset " + toHexStr(offset) +
+				"Write attepmpt at offset " + toHexStr(offsetWritingTo) +
 				".\nNote tht valid memory locations for " + GetName<DataLoc>() + " are 0x00 to " +
 				toHexStr(GetUprBnd<DataLoc>() - GetLwrBnd<DataLoc>()));
 			return;
 		}
-		memcpy(m_Memory + GetLwrBnd<DataLoc>() + offset, &data, Bytes);
+		memcpy(m_Memory.data() + GetLwrBnd<DataLoc>() + offsetWritingTo, &dataToWrite, Bytes);
+		//memcpy(m_Memory + GetLwrBnd<DataLoc>() + offset, &data, Bytes)
 		SetDebugECMsg(e, "Operation succeeded");
 	}
 
@@ -265,7 +267,9 @@ private:
 		if (T == Type::ALL)		e.flag |= (int)ErrorFlags::MEMORY_SECTION_ALL;
 	}
 
-private:
-	uint8_t* m_Memory;
+	//set back to private
+public:
+	//uint8_t* m_Memory;
+	std::array<uint8_t, 0xFFFF> m_Memory = { 0 };
 };
 

@@ -2,7 +2,8 @@
 
 #include "../thirdparty/imgui/imgui.h"
 
-
+//incase we switch back to std::array<uint8_t, 0xFFFF>* memoryToView
+//then just going to keep this placeholder: void MemoryViewer::setup(std::array<uint8_t, 0xFFFF>* memoryToView)
 void MemoryViewer::setup(std::array<uint8_t, 0xFFFF>* memoryToView)
 {
 	auto style = &ImGui::GetStyle();

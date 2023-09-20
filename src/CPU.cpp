@@ -5,12 +5,25 @@
 #include "Opcodes.h"
 #include "MEM.h"
 
-void CPU::execute_opcode(uint16_t index, Memory* mem)
+CPU::CPU()
 {
-	opcode* cur_op = opcodeLookup[index].get();
+	InitOpcodeTable();
+}
+
+//assumes memory has been loaded into ram (think of disk being loaded into memory)
+void CPU::startExecAt(Memory* mem) 
+{
+
+}
+
+void CPU::execute_opcode(uint8_t index, Memory* mem)
+{
+	//opcode* cur_op = opcodeLookup[index].get();
+	std::shared_ptr<opcode> cur_op = opcodeLookup[index];
 	if constexpr (LimitCycles)
 	{
 		timer.Reset();
+		std::cout << cur_op->disassemble_to_string(this, mem) << "\n";
 		cur_op->execute(this, mem);
 		int cyclefreq = (1 / this->ProcesserFrequency) * 1000000000;
 		this->PC += cur_op->m_size; //NOt 100 percent sure this is right 
@@ -21,26 +34,6 @@ void CPU::execute_opcode(uint16_t index, Memory* mem)
 		cur_op->execute(this, mem);
 		this->PC += cur_op->m_size;
 	}
-}
-
-void CPU::setFlags(uint16_t reg, uint16_t reg2 = 0)
-{
-	if (reg == -1) 
-	{
-		cpu_LastError.Clear();
-		cpu_LastError.flag |= (int)ErrorFlags::INVALID_REGISTER_CALL;
-		printf("Tried to set flags for an opcode that doesn't use any\n");
-		return;
-	}
-	flags.Z = (reg == 0) & 1;  // Set Z flag to 1 if A is zero, else 0
-	flags.S = (reg > 0) & 1;   // Set S flag to 1 if A is positive, else 0
-	flags.C = (((uint16_t)reg + reg2) > 0xff) & 1; //set C flag to 1 if the result of the operation is going to be too big to fit in the register
-	flags.P = ((std::popcount(reg) % 2) == 0) & 1; //set the Parity flag to 1 if number of bits is even, 0 if odd
-	
-	//this is highly infuriating, this basically would need to be put into a switch statement based off of 
-	// the currently executing opcode to decide which type of Auxiliary Carry to execute. 
-	// (there is one for ADD, SUB, INC, INX, DEC, DECX...etc. ) 
-	//cpu->flags.AC = ac_flagADD(cpu->A, cpu->B);
 }
 
 std::string CPU::RegToStr(int r)
@@ -55,55 +48,55 @@ void CPU::load_register_value(Registers reg, uint8_t* value)
 	{
 	case Registers::A:
 	{
-		this->A = value[0];
+		this->A = value[1];
 	} break;
 	case Registers::B:
 	{
-		this->B = value[0];
+		this->B = value[1];
 	} break;
 	case Registers::C:
 	{
-		this->C = value[0];
+		this->C = value[1];
 	} break;
 	case Registers::BC:
 	{
-		this->C = value[0];
-		this->B = value[1];
+		this->C = value[1];
+		this->B = value[2];
 	}
 	case Registers::D:
 	{
-		this->D = value[0];
+		this->D = value[1];
 	} break;
 	case Registers::E:
 	{
-		this->E = value[0];
+		this->E = value[1];
 	} break;
 	case Registers::DE:
 	{
-		this->E = value[0];
-		this->D = value[1];
+		this->E = value[1];
+		this->D = value[2];
 	} break;
 	case Registers::H:
 	{
-		this->H = value[0];
+		this->H = value[1];
 	} break;
 	case Registers::L:
 	{
-		this->L = value[0];
+		this->L = value[2];
 	} break;
 	case Registers::HL:
 	{
-		this->L = value[0];
-		this->H = value[1];
+		this->L = value[1];
+		this->H = value[2];
 	} break;
 	case Registers::SP:
 	{
 		//NOT TESTED
 		//SP.low = byte 2
-		*((uint8_t*)&this->SP + 1) = value[0];//get the FIRST 8 BIT (SP is 16 bit) address of the SP, add 1 (go to the next byte), derefence it, then assign
+		*((uint8_t*)&this->SP + 1) = value[1];//get the FIRST 8 BIT (SP is 16 bit) address of the SP, add 1 (go to the next byte), derefence it, then assign
 												//this->SP << value[0];
 		//SP.high = byte 3
-		this->SP = value[1];
+		this->SP = value[2];
 
 	} break;
 	default:
@@ -124,7 +117,7 @@ void CPU::InitOpcodeTable()
 	opcodeLookup[0x03] = std::make_shared<INX>(Registers::BC);
 	opcodeLookup[0x04] = std::make_shared<INR>(Registers::B);
 	opcodeLookup[0x05] = std::make_shared<DCR>(Registers::B);
-	opcodeLookup[0x06] = std::make_shared<MVI>(Registers::B);
+	/*opcodeLookup[0x06] = std::make_shared<MVI>(Registers::B);
 	opcodeLookup[0x07] = std::make_shared<RLC>();
 	opcodeLookup[0x08] = std::make_shared<NOP>();
 	opcodeLookup[0x09] = std::make_shared<DAD>(Registers::B);
@@ -133,7 +126,7 @@ void CPU::InitOpcodeTable()
 	opcodeLookup[0x0C] = std::make_shared<INR>(Registers::C);
 	opcodeLookup[0x0D] = std::make_shared<DCR>(Registers::C);
 	opcodeLookup[0x0E] = std::make_shared<MVI>();
-	opcodeLookup[0x0F] = std::make_shared<RRC>();
+	opcodeLookup[0x0F] = std::make_shared<RRC>();*/
 
 	//10-1F opcodes, 16-31 opcodes
 	opcodeLookup[0x10] = std::make_shared<NOP>();
@@ -142,8 +135,8 @@ void CPU::InitOpcodeTable()
 	opcodeLookup[0x13] = std::make_shared<INX>(Registers::DE);
 	opcodeLookup[0x14] = std::make_shared<INR>(Registers::D);
 	opcodeLookup[0x15] = std::make_shared<DCR>(Registers::D);
-	opcodeLookup[0x16] = std::make_shared<MVI>(Registers::D);
-	opcodeLookup[0x17] = std::make_shared<RAL>();
+	//opcodeLookup[0x16] = std::make_shared<MVI>(Registers::D);
+	/*opcodeLookup[0x17] = std::make_shared<RAL>();
 	opcodeLookup[0x18] = std::make_shared<NOP>();
 	opcodeLookup[0x19] = std::make_shared<DAD>();
 	opcodeLookup[0x1A] = std::make_shared<LDAX>(Registers::DE);
@@ -260,7 +253,7 @@ void CPU::InitOpcodeTable()
 	opcodeLookup[0x7D] = std::make_shared<MOV>();
 	opcodeLookup[0x7E] = std::make_shared<MOV>();
 	opcodeLookup[0x7F] = std::make_shared<MOV>();
-
+	*/
 	//80-8F opcodes 128-143 opcodes
 	opcodeLookup[0x80] = std::make_shared<NOP>();
 	opcodeLookup[0x81] = std::make_shared<NOP>();

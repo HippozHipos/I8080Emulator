@@ -15,7 +15,7 @@ Application::Application()
         //OR works because we can set 32 bits of an int. e.g. 0000 -> 0010 sets 1 flag, 0011 sets different flags...etc.
         imgooey::SetFlags(ImGuiConfigFlags_NavEnableGamepad | ImGuiConfigFlags_NavEnableKeyboard);
 
-        memview->setup(&this->test_ram);
+        memview->setup(&this->mem.m_Memory);
 }
 
 Application::~Application()

@@ -2,6 +2,7 @@
 #include <memory>
 #include <array>
 #include "MemoryViewer.h"
+#include "MEM.h"
 #include "Platformwin/PlatformWin32.h"
 
 class Application
@@ -14,7 +15,8 @@ public:
 
 private:
     //SHOULD BE HANDLED BY EMULATOR
-    std::array<uint8_t, 0xFFFF> test_ram{};
+    //std::array<uint8_t, 0xFFFF> test_ram{};
+    Memory mem;
     // Forward declarations of helper functions
     std::unique_ptr<MemoryViewer> memview{ new MemoryViewer() };
     // Create application window
