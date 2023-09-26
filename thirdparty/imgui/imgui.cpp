@@ -4,7 +4,7 @@
 // Help:
 // - Read FAQ at http://dearimgui.com/faq
 // - Newcomers, read 'Programmer guide' below for notes on how to setup Dear ImGui in your codebase.
-// - Call and read ImGui::ShowDemoWindow() in imgui_demo.cpp. All applications in examples/ are doing that.
+// - Call and read ImGui::ShowDemoWindow() in imgui_demo.cpp. All Simulations in examples/ are doing that.
 // Read imgui.cpp for details, links and comments.
 
 // Resources:
@@ -48,7 +48,7 @@ DOCUMENTATION
   - READ FIRST
   - HOW TO UPDATE TO A NEWER VERSION OF DEAR IMGUI
   - GETTING STARTED WITH INTEGRATING DEAR IMGUI IN YOUR CODE/ENGINE
-  - HOW A SIMPLE APPLICATION MAY LOOK LIKE
+  - HOW A SIMPLE Simulation MAY LOOK LIKE
   - HOW A SIMPLE RENDERING FUNCTION MAY LOOK LIKE
 - API BREAKING CHANGES (read me when you update!)
 - FREQUENTLY ASKED QUESTIONS (FAQ)
@@ -194,7 +194,7 @@ CODE
  READ FIRST
  ----------
  - Remember to check the wonderful Wiki (https://github.com/ocornut/imgui/wiki)
- - Your code creates the UI every frame of your application loop, if your code doesn't run the UI is gone!
+ - Your code creates the UI every frame of your Simulation loop, if your code doesn't run the UI is gone!
    The UI can be highly dynamic, there are no construction or destruction steps, less superfluous
    data retention on your side, less state duplication, less state synchronization, fewer bugs.
  - Call and read ImGui::ShowDemoWindow() for demo code demonstrating most features.
@@ -203,7 +203,7 @@ CODE
  - Dear ImGui is an implementation of the IMGUI paradigm (immediate-mode graphical user interface, a term coined by Casey Muratori).
    You can learn about IMGUI principles at http://www.johno.se/book/imgui.html, http://mollyrocket.com/861 & more links in Wiki.
  - Dear ImGui is a "single pass" rasterizing implementation of the IMGUI paradigm, aimed at ease of use and high-performances.
-   For every application frame, your UI code will be called only once. This is in contrast to e.g. Unity's implementation of an IMGUI,
+   For every Simulation frame, your UI code will be called only once. This is in contrast to e.g. Unity's implementation of an IMGUI,
    where the UI code is called multiple times ("multiple passes") from a single entry point. There are pros and cons to both approaches.
  - Our origin is on the top-left. In axis aligned bounding boxes, Min = top-left, Max = bottom-right.
  - Please make sure you have asserts enabled (IM_ASSERT redirects to assert() by default, but can be redirected).
@@ -260,17 +260,17 @@ CODE
  - When using Dear ImGui, your programming IDE is your friend: follow the declaration of variables, functions and types to find comments about them.
  - Dear ImGui never touches or knows about your GPU state. The only function that knows about GPU is the draw function that you provide.
    Effectively it means you can create widgets at any time in your code, regardless of considerations of being in "update" vs "render"
-   phases of your own application. All rendering information is stored into command-lists that you will retrieve after calling ImGui::Render().
- - Refer to the backends and demo applications in the examples/ folder for instruction on how to setup your code.
+   phases of your own Simulation. All rendering information is stored into command-lists that you will retrieve after calling ImGui::Render().
+ - Refer to the backends and demo Simulations in the examples/ folder for instruction on how to setup your code.
  - If you are running over a standard OS with a common graphics API, you should be able to use unmodified imgui_impl_*** files from the examples/ folder.
 
 
- HOW A SIMPLE APPLICATION MAY LOOK LIKE
+ HOW A SIMPLE Simulation MAY LOOK LIKE
  --------------------------------------
  EXHIBIT 1: USING THE EXAMPLE BACKENDS (= imgui_impl_XXX.cpp files from the backends/ folder).
- The sub-folders in examples/ contain examples applications following this structure.
+ The sub-folders in examples/ contain examples Simulations following this structure.
 
-     // Application init: create a dear imgui context, setup some options, load fonts
+     // Simulation init: create a dear imgui context, setup some options, load fonts
      ImGui::CreateContext();
      ImGuiIO& io = ImGui::GetIO();
      // TODO: Set optional io.ConfigFlags values, e.g. 'io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard' to enable keyboard controls.
@@ -281,7 +281,7 @@ CODE
      ImGui_ImplWin32_Init(hwnd);
      ImGui_ImplDX11_Init(g_pd3dDevice, g_pd3dDeviceContext);
 
-     // Application main loop
+     // Simulation main loop
      while (true)
      {
          // Feed inputs to dear imgui, start new frame
@@ -289,7 +289,7 @@ CODE
          ImGui_ImplWin32_NewFrame();
          ImGui::NewFrame();
 
-         // Any application code here
+         // Any Simulation code here
          ImGui::Text("Hello, world!");
 
          // Render dear imgui into screen
@@ -305,7 +305,7 @@ CODE
 
  EXHIBIT 2: IMPLEMENTING CUSTOM BACKEND / CUSTOM ENGINE
 
-     // Application init: create a dear imgui context, setup some options, load fonts
+     // Simulation init: create a dear imgui context, setup some options, load fonts
      ImGui::CreateContext();
      ImGuiIO& io = ImGui::GetIO();
      // TODO: Set optional io.ConfigFlags values, e.g. 'io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard' to enable keyboard controls.
@@ -324,7 +324,7 @@ CODE
      MyTexture* texture = MyEngine::CreateTextureFromMemoryPixels(pixels, width, height, TEXTURE_TYPE_RGBA32)
      io.Fonts->SetTexID((void*)texture);
 
-     // Application main loop
+     // Simulation main loop
      while (true)
      {
         // Setup low-level inputs, e.g. on Win32: calling GetKeyboardState(), or write to those fields from your Windows message handlers, etc.
@@ -340,7 +340,7 @@ CODE
         // (So you want to try calling NewFrame() as early as you can in your main loop to be able to use Dear ImGui everywhere)
         ImGui::NewFrame();
 
-        // Most of your application code here
+        // Most of your Simulation code here
         ImGui::Text("Hello, world!");
         MyGameUpdate(); // may use any Dear ImGui functions, e.g. ImGui::Begin("My window"); ImGui::Text("Hello, world!"); ImGui::End();
         MyGameRender(); // may use any Dear ImGui functions as well!
@@ -357,9 +357,9 @@ CODE
      // Shutdown
      ImGui::DestroyContext();
 
- To decide whether to dispatch mouse/keyboard inputs to Dear ImGui to the rest of your application,
+ To decide whether to dispatch mouse/keyboard inputs to Dear ImGui to the rest of your Simulation,
  you should read the 'io.WantCaptureMouse', 'io.WantCaptureKeyboard' and 'io.WantTextInput' flags!
- Please read the FAQ and example applications for details about this!
+ Please read the FAQ and example Simulations for details about this!
 
 
  HOW A SIMPLE RENDERING FUNCTION MAY LOOK LIKE
@@ -399,8 +399,8 @@ CODE
                  //   (some elements visible outside their bounds) but you can fix that once everything else works!
                  // - Clipping coordinates are provided in imgui coordinates space:
                  //   - For a given viewport, draw_data->DisplayPos == viewport->Pos and draw_data->DisplaySize == viewport->Size
-                 //   - In a single viewport application, draw_data->DisplayPos == (0,0) and draw_data->DisplaySize == io.DisplaySize, but always use GetMainViewport()->Pos/Size instead of hardcoding those values.
-                 //   - In the interest of supporting multi-viewport applications (see 'docking' branch on github),
+                 //   - In a single viewport Simulation, draw_data->DisplayPos == (0,0) and draw_data->DisplaySize == io.DisplaySize, but always use GetMainViewport()->Pos/Size instead of hardcoding those values.
+                 //   - In the interest of supporting multi-viewport Simulations (see 'docking' branch on github),
                  //     always subtract draw_data->DisplayPos from clipping bounds to convert them to your viewport space.
                  // - Note that pcmd->ClipRect contains Min+Max bounds. Some graphics API may use Min+Max, other may use Min+Size (size being Max-Min)
                  MyEngineSetScissor(clip_min.x, clip_min.y, clip_max.x, clip_max.y);
@@ -841,13 +841,13 @@ CODE
 
  Q: Where is the documentation?
  A: This library is poorly documented at the moment and expects the user to be acquainted with C/C++.
-    - Run the examples/ applications and explore them.
+    - Run the examples/ Simulations and explore them.
     - Read Getting Started (https://github.com/ocornut/imgui/wiki/Getting-Started) guide.
     - See demo code in imgui_demo.cpp and particularly the ImGui::ShowDemoWindow() function.
     - The demo covers most features of Dear ImGui, so you can read the code and see its output.
     - See documentation and comments at the top of imgui.cpp + effectively imgui.h.
-    - 20+ standalone example applications using e.g. OpenGL/DirectX are provided in the
-      examples/ folder to explain how to integrate Dear ImGui with your own engine/application.
+    - 20+ standalone example Simulations using e.g. OpenGL/DirectX are provided in the
+      examples/ folder to explain how to integrate Dear ImGui with your own engine/Simulation.
     - The Wiki (https://github.com/ocornut/imgui/wiki) has many resources and links.
     - The Glossary (https://github.com/ocornut/imgui/wiki/Glossary) page also may be useful.
     - Your programming IDE is your friend, find the type or function declaration to find comments
@@ -864,7 +864,7 @@ CODE
  Q: How to get started?
  A: Read https://github.com/ocornut/imgui/wiki/Getting-Started. Read 'PROGRAMMER GUIDE' above. Read examples/README.txt.
 
- Q: How can I tell whether to dispatch mouse/keyboard to Dear ImGui or my application?
+ Q: How can I tell whether to dispatch mouse/keyboard to Dear ImGui or my Simulation?
  A: You should read the 'io.WantCaptureMouse', 'io.WantCaptureKeyboard' and 'io.WantTextInput' flags!
  >> See https://www.dearimgui.com/faq for a fully detailed answer. You really want to read this.
 
@@ -892,9 +892,9 @@ CODE
  Q&A: Fonts, Text
  ================
 
- Q: How should I handle DPI in my application?
+ Q: How should I handle DPI in my Simulation?
  Q: How can I load a different font than the default?
- Q: How can I easily use icons in my application?
+ Q: How can I easily use icons in my Simulation?
  Q: How can I load multiple fonts?
  Q: How can I display and input non-Latin characters such as Chinese, Japanese, Korean, Cyrillic?
  >> See https://www.dearimgui.com/faq and https://github.com/ocornut/imgui/edit/master/docs/FONTS.md
@@ -1540,7 +1540,7 @@ void ImGuiIO::SetKeyEventNativeData(ImGuiKey key, int native_keycode, int native
 #endif
 }
 
-// Set master flag for accepting key/mouse/text events (default to true). Useful if you have native dialog boxes that are interrupting your application loop/refresh, and you want to disable events being queued while your app is frozen.
+// Set master flag for accepting key/mouse/text events (default to true). Useful if you have native dialog boxes that are interrupting your Simulation loop/refresh, and you want to disable events being queued while your app is frozen.
 void ImGuiIO::SetAppAcceptingEvents(bool accepting_events)
 {
     AppAcceptingEvents = accepting_events;
@@ -4634,7 +4634,7 @@ void ImGui::UpdateHoveredWindowAndCaptureFlags()
     if (io.ConfigFlags & ImGuiConfigFlags_NoMouse)
         clear_hovered_windows = true;
 
-    // We track click ownership. When clicked outside of a window the click is owned by the application and
+    // We track click ownership. When clicked outside of a window the click is owned by the Simulation and
     // won't report hovering nor request capture even while dragging over our windows afterward.
     const bool has_open_popup = (g.OpenPopupStack.Size > 0);
     const bool has_open_modal = (modal_window != NULL);
@@ -4664,7 +4664,7 @@ void ImGui::UpdateHoveredWindowAndCaptureFlags()
     if (clear_hovered_windows)
         g.HoveredWindow = g.HoveredWindowUnderMovingWindow = NULL;
 
-    // Update io.WantCaptureMouse for the user application (true = dispatch mouse info to Dear ImGui only, false = dispatch mouse to Dear ImGui + underlying app)
+    // Update io.WantCaptureMouse for the user Simulation (true = dispatch mouse info to Dear ImGui only, false = dispatch mouse to Dear ImGui + underlying app)
     // Update io.WantCaptureMouseAllowPopupClose (experimental) to give a chance for app to react to popup closure with a drag
     if (g.WantCaptureMouseNextFrame != -1)
     {
@@ -4676,7 +4676,7 @@ void ImGui::UpdateHoveredWindowAndCaptureFlags()
         io.WantCaptureMouseUnlessPopupClose = (mouse_avail_unless_popup_close && (g.HoveredWindow != NULL || mouse_any_down)) || has_open_modal;
     }
 
-    // Update io.WantCaptureKeyboard for the user application (true = dispatch keyboard info to Dear ImGui only, false = dispatch keyboard info to Dear ImGui + underlying app)
+    // Update io.WantCaptureKeyboard for the user Simulation (true = dispatch keyboard info to Dear ImGui only, false = dispatch keyboard info to Dear ImGui + underlying app)
     if (g.WantCaptureKeyboardNextFrame != -1)
         io.WantCaptureKeyboard = (g.WantCaptureKeyboardNextFrame != 0);
     else
@@ -5062,7 +5062,7 @@ static void InitViewportDrawData(ImGuiViewportP* viewport)
     viewport->DrawDataBuilder.Layers[1]->resize(0);
 
     // When minimized, we report draw_data->DisplaySize as zero to be consistent with non-viewport mode,
-    // and to allow applications/backends to easily skip rendering.
+    // and to allow Simulations/backends to easily skip rendering.
     // FIXME: Note that we however do NOT attempt to report "zero drawlist / vertices" into the ImDrawData structure.
     // This is because the work has been done already, and its wasted! We should fix that and add optimizations for
     // it earlier in the pipeline, rather than pretend to hide the data at the end of the pipeline.
@@ -9574,7 +9574,7 @@ void ImGui::UpdateInputEvents(bool trickle_fast_inputs)
         }
     }
 
-    // Record trail (for domain-specific applications wanting to access a precise trail)
+    // Record trail (for domain-specific Simulations wanting to access a precise trail)
     //if (event_n != 0) IMGUI_DEBUG_LOG_IO("Processed: %d / Remaining: %d\n", event_n, g.InputEventsQueue.Size - event_n);
     for (int n = 0; n < event_n; n++)
         g.InputEventsTrail.push_back(g.InputEventsQueue[n]);
@@ -9594,7 +9594,7 @@ void ImGui::UpdateInputEvents(bool trickle_fast_inputs)
 
     // Clear buttons state when focus is lost
     // - this is useful so e.g. releasing Alt after focus loss on Alt-Tab doesn't trigger the Alt menu toggle.
-    // - we clear in EndFrame() and not now in order allow application/user code polling this flag
+    // - we clear in EndFrame() and not now in order allow Simulation/user code polling this flag
     //   (e.g. custom backend may want to clear additional data, custom widgets may want to react with a "canceling" event).
     if (g.IO.AppFocusLost)
         g.IO.ClearInputKeys();
@@ -9842,7 +9842,7 @@ static void ImGui::ErrorCheckNewFrameSanityChecks()
     {
         if ((g.IO.BackendFlags & ImGuiBackendFlags_PlatformHasViewports) && (g.IO.BackendFlags & ImGuiBackendFlags_RendererHasViewports))
         {
-            IM_ASSERT((g.FrameCount == 0 || g.FrameCount == g.FrameCountPlatformEnded) && "Forgot to call UpdatePlatformWindows() in main loop after EndFrame()? Check examples/ applications for reference.");
+            IM_ASSERT((g.FrameCount == 0 || g.FrameCount == g.FrameCountPlatformEnded) && "Forgot to call UpdatePlatformWindows() in main loop after EndFrame()? Check examples/ Simulations for reference.");
             IM_ASSERT(g.PlatformIO.Platform_CreateWindow  != NULL && "Platform init didn't install handlers?");
             IM_ASSERT(g.PlatformIO.Platform_DestroyWindow != NULL && "Platform init didn't install handlers?");
             IM_ASSERT(g.PlatformIO.Platform_GetWindowPos  != NULL && "Platform init didn't install handlers?");
@@ -12007,7 +12007,7 @@ static ImVec2 ImGui::NavCalcPreferredRefPos()
         }
         ImVec2 pos = ImVec2(rect_rel.Min.x + ImMin(g.Style.FramePadding.x * 4, rect_rel.GetWidth()), rect_rel.Max.y - ImMin(g.Style.FramePadding.y, rect_rel.GetHeight()));
         ImGuiViewport* viewport = window->Viewport;
-        return ImFloor(ImClamp(pos, viewport->Pos, viewport->Pos + viewport->Size)); // ImFloor() is important because non-integer mouse position application in backend might be lossy and result in undesirable non-zero delta.
+        return ImFloor(ImClamp(pos, viewport->Pos, viewport->Pos + viewport->Size)); // ImFloor() is important because non-integer mouse position Simulation in backend might be lossy and result in undesirable non-zero delta.
     }
 }
 
@@ -12088,7 +12088,7 @@ static void ImGui::NavUpdate()
     // Update CTRL+TAB and Windowing features (hold Square to move/resize/etc.)
     NavUpdateWindowing();
 
-    // Set output flags for user application
+    // Set output flags for user Simulation
     io.NavActive = (nav_keyboard_active || nav_gamepad_active) && g.NavWindow && !(g.NavWindow->Flags & ImGuiWindowFlags_NoNavInputs);
     io.NavVisible = (io.NavActive && g.NavId != 0 && !g.NavDisableHighlight) || (g.NavWindowingTarget != NULL);
 
@@ -14096,7 +14096,7 @@ void ImGui::TranslateWindowsInViewport(ImGuiViewportP* viewport, const ImVec2& o
     // 1) We test if ImGuiConfigFlags_ViewportsEnable was just toggled, which allows us to conveniently
     // translate imgui windows from OS-window-local to absolute coordinates or vice-versa.
     // 2) If it's not going to fit into the new size, keep it at same absolute position.
-    // One problem with this is that most Win32 applications doesn't update their render while dragging,
+    // One problem with this is that most Win32 Simulations doesn't update their render while dragging,
     // and so the window will appear to teleport when releasing the mouse.
     const bool translate_all_windows = (g.ConfigFlagsCurrFrame & ImGuiConfigFlags_ViewportsEnable) != (g.ConfigFlagsLastFrame & ImGuiConfigFlags_ViewportsEnable);
     ImRect test_still_fit_rect(old_pos, old_pos + viewport->Size);
@@ -14713,7 +14713,7 @@ void ImGui::UpdatePlatformWindows()
         return;
 
     // Create/resize/destroy platform windows to match each active viewport.
-    // Skip the main viewport (index 0), which is always fully handled by the application!
+    // Skip the main viewport (index 0), which is always fully handled by the Simulation!
     for (int i = 1; i < g.Viewports.Size; i++)
     {
         ImGuiViewportP* viewport = g.Viewports[i];
@@ -14817,7 +14817,7 @@ void ImGui::UpdatePlatformWindows()
 //
 void ImGui::RenderPlatformWindowsDefault(void* platform_render_arg, void* renderer_render_arg)
 {
-    // Skip the main viewport (index 0), which is always fully handled by the application!
+    // Skip the main viewport (index 0), which is always fully handled by the Simulation!
     ImGuiPlatformIO& platform_io = ImGui::GetPlatformIO();
     for (int i = 1; i < platform_io.Viewports.Size; i++)
     {
@@ -16597,7 +16597,7 @@ static int IMGUI_CDECL TabItemComparerByDockOrder(const void* lhs, const void* r
 }
 
 // Default handler for g.DockNodeWindowMenuHandler(): display the list of windows for a given dock-node.
-// This is exceptionally stored in a function pointer to also user applications to tweak this menu (undocumented)
+// This is exceptionally stored in a function pointer to also user Simulations to tweak this menu (undocumented)
 // Custom overrides may want to decorate, group, sort entries.
 // Please note those are internal structures: if you copy this expect occasional breakage.
 void ImGui::DockNodeWindowMenuHandler_Default(ImGuiContext* ctx, ImGuiDockNode* node, ImGuiTabBar* tab_bar)
@@ -17489,7 +17489,7 @@ void ImGui::DockNodeTreeUpdatePosSize(ImGuiDockNode* node, ImVec2 pos, ImVec2 si
         const float size_min_each = ImFloor(ImMin(size_avail, g.Style.WindowMinSize[axis] * 2.0f) * 0.5f);
 
         // FIXME: Blocks 2) and 3) are essentially doing nearly the same thing.
-        // Difference are: write-back to SizeRef; application of a minimum size; rounding before ImFloor()
+        // Difference are: write-back to SizeRef; Simulation of a minimum size; rounding before ImFloor()
         // Clarify and rework differences between Size & SizeRef and purpose of WantLockSizeOnce
 
         // 2) Process locked absolute size (during a splitter resize we preserve the child of nodes not touching the splitter edge)
@@ -18922,7 +18922,7 @@ static void SetClipboardTextFn_DefaultImpl(void*, const char* text)
 static PasteboardRef main_clipboard = 0;
 
 // OSX clipboard implementation
-// If you enable this you will need to add '-framework ApplicationServices' to your linker command-line!
+// If you enable this you will need to add '-framework SimulationServices' to your linker command-line!
 static void SetClipboardTextFn_DefaultImpl(void*, const char* text)
 {
     if (!main_clipboard)
@@ -19252,7 +19252,7 @@ void ImGui::ShowMetricsWindow(bool* p_open)
 
     // Basic info
     Text("Dear ImGui %s", GetVersion());
-    Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+    Text("Simulation average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
     Text("%d vertices, %d indices (%d triangles)", io.MetricsRenderVertices, io.MetricsRenderIndices, io.MetricsRenderIndices / 3);
     Text("%d visible windows, %d active allocations", io.MetricsRenderWindows, io.MetricsActiveAllocations);
     //SameLine(); if (SmallButton("GC")) { g.GcCompactAll = true; }

@@ -3,7 +3,7 @@
 
 // Help:
 // - Read FAQ at http://dearimgui.com/faq
-// - Call and read ImGui::ShowDemoWindow() in imgui_demo.cpp. All applications in examples/ are doing that.
+// - Call and read ImGui::ShowDemoWindow() in imgui_demo.cpp. All Simulations in examples/ are doing that.
 // - Need help integrating Dear ImGui in your codebase?
 //   - Read Getting Started https://github.com/ocornut/imgui/wiki/Getting-Started
 //   - Read 'Programmer guide' in imgui.cpp for notes on how to setup Dear ImGui in your codebase.
@@ -34,7 +34,7 @@
 // doesn't need to be reentrant or used in multiple threads. This might be a pattern you will want to use in your code,
 // but most of the real data you would be editing is likely going to be stored outside your functions.
 
-// The Demo code in this file is designed to be easy to copy-and-paste into your application!
+// The Demo code in this file is designed to be easy to copy-and-paste into your Simulation!
 // Because of this:
 // - We never omit the ImGui:: prefix when calling functions, even though most code here is in the same namespace.
 // - We try to declare static variables in the local scope, as close as possible to the code using them.
@@ -144,7 +144,7 @@ Index of this file:
 #endif
 
 // Format specifiers, printing 64-bit hasn't been decently standardized...
-// In a real application you should be using PRId64 and PRIu64 from <inttypes.h> (non-windows) and on Windows define them yourself.
+// In a real Simulation you should be using PRId64 and PRIu64 from <inttypes.h> (non-windows) and on Windows define them yourself.
 #ifdef _MSC_VER
 #define IM_PRId64   "I64d"
 #define IM_PRIu64   "I64u"
@@ -341,7 +341,7 @@ void ImGui::ShowDemoWindow(bool* p_open)
     if (no_close)           p_open = NULL; // Don't pass our bool* to Begin
 
     // We specify a default position/size in case there's no data in the .ini file.
-    // We only do it to make the demo applications a little more welcoming, but typically this isn't required.
+    // We only do it to make the demo Simulations a little more welcoming, but typically this isn't required.
     const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 650, main_viewport->WorkPos.y + 20), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(550, 680), ImGuiCond_FirstUseEver);
@@ -422,7 +422,7 @@ void ImGui::ShowDemoWindow(bool* p_open)
         ImGui::SeparatorText("PROGRAMMER GUIDE:");
         ImGui::BulletText("See the ShowDemoWindow() code in imgui_demo.cpp. <- you are here!");
         ImGui::BulletText("See comments in imgui.cpp.");
-        ImGui::BulletText("See example applications in the examples/ folder.");
+        ImGui::BulletText("See example Simulations in the examples/ folder.");
         ImGui::BulletText("Read the FAQ at http://www.dearimgui.com/faq/");
         ImGui::BulletText("Set 'io.ConfigFlags |= NavEnableKeyboard' for keyboard controls.");
         ImGui::BulletText("Set 'io.ConfigFlags |= NavEnableGamepad' for gamepad controls.");
@@ -499,7 +499,7 @@ void ImGui::ShowDemoWindow(bool* p_open)
             ImGui::Checkbox("io.ConfigInputTrickleEventQueue", &io.ConfigInputTrickleEventQueue);
             ImGui::SameLine(); HelpMarker("Enable input queue trickling: some types of events submitted during the same frame (e.g. button down + up) will be spread over multiple frames, improving interactions with low framerates.");
             ImGui::Checkbox("io.MouseDrawCursor", &io.MouseDrawCursor);
-            ImGui::SameLine(); HelpMarker("Instruct Dear ImGui to render a mouse cursor itself. Note that a mouse cursor rendered via your application GPU rendering path will feel more laggy than hardware cursor, but will be more in sync with your other visuals.\n\nSome desktop applications may use both kinds of cursors (e.g. enable software cursor only when resizing/dragging something).");
+            ImGui::SameLine(); HelpMarker("Instruct Dear ImGui to render a mouse cursor itself. Note that a mouse cursor rendered via your Simulation GPU rendering path will feel more laggy than hardware cursor, but will be more in sync with your other visuals.\n\nSome desktop Simulations may use both kinds of cursors (e.g. enable software cursor only when resizing/dragging something).");
 
             ImGui::SeparatorText("Widgets");
             ImGui::Checkbox("io.ConfigInputTextCursorBlink", &io.ConfigInputTextCursorBlink);
@@ -518,7 +518,7 @@ void ImGui::ShowDemoWindow(bool* p_open)
             ImGui::BeginDisabled();
             ImGui::Checkbox("io.ConfigDebugBeginReturnValueOnce", &io.ConfigDebugBeginReturnValueOnce); // .
             ImGui::EndDisabled();
-            ImGui::SameLine(); HelpMarker("First calls to Begin()/BeginChild() will return false.\n\nTHIS OPTION IS DISABLED because it needs to be set at application boot-time to make sense. Showing the disabled option is a way to make this feature easier to discover");
+            ImGui::SameLine(); HelpMarker("First calls to Begin()/BeginChild() will return false.\n\nTHIS OPTION IS DISABLED because it needs to be set at Simulation boot-time to make sense. Showing the disabled option is a way to make this feature easier to discover");
             ImGui::Checkbox("io.ConfigDebugBeginReturnValueLoop", &io.ConfigDebugBeginReturnValueLoop);
             ImGui::SameLine(); HelpMarker("Some calls to Begin()/BeginChild() will return false.\n\nWill cycle through window depths then repeat. Windows should be flickering while running.");
             ImGui::Checkbox("io.ConfigDebugIgnoreFocusLoss", &io.ConfigDebugIgnoreFocusLoss);
@@ -1109,9 +1109,9 @@ static void ShowDemoWindowWidgets()
             //   can save your source files as 'UTF-8 without signature').
             // - FOR THIS DEMO FILE ONLY, BECAUSE WE WANT TO SUPPORT OLD COMPILERS, WE ARE *NOT* INCLUDING RAW UTF-8
             //   CHARACTERS IN THIS SOURCE FILE. Instead we are encoding a few strings with hexadecimal constants.
-            //   Don't do this in your application! Please use u8"text in any language" in your application!
+            //   Don't do this in your Simulation! Please use u8"text in any language" in your Simulation!
             // Note that characters values are preserved even by InputText() if the font cannot be displayed,
-            // so you can safely copy & paste garbled characters into another application.
+            // so you can safely copy & paste garbled characters into another Simulation.
             ImGui::TextWrapped(
                 "CJK text will only appear if the font was loaded with the appropriate CJK character ranges. "
                 "Call io.Fonts->AddFontFromFileTTF() manually to load extra character ranges. "
@@ -1312,7 +1312,7 @@ static void ShowDemoWindowWidgets()
         // - The one taking "bool selected" as a read-only selection information.
         //   When Selectable() has been clicked it returns true and you can alter selection state accordingly.
         // - The one taking "bool* p_selected" as a read-write selection information (convenient in some cases)
-        // The earlier is more flexible, as in real application your selection may be stored in many different ways
+        // The earlier is more flexible, as in real Simulation your selection may be stored in many different ways
         // and not necessarily inside a bool value (e.g. in flags within objects, as an external list, etc).
         IMGUI_DEMO_MARKER("Widgets/Selectables/Basic");
         if (ImGui::TreeNode("Basic"))
@@ -2684,7 +2684,7 @@ static void ShowDemoWindowWidgets()
     if (ImGui::TreeNode("Text Filter"))
     {
         // Helper class to easy setup a text filter.
-        // You may want to implement a more feature-full filtering scheme in your own application.
+        // You may want to implement a more feature-full filtering scheme in your own Simulation.
         HelpMarker("Not a widget per-se, but ImGuiTextFilter is a helper to perform simple filtering on text strings.");
         static ImGuiTextFilter filter;
         ImGui::Text("Filter usage:\n"
@@ -3269,7 +3269,7 @@ static void ShowDemoWindowLayout()
         for (int line = 0; line < lines; line++)
         {
             // Display random stuff. For the sake of this trivial demo we are using basic Button() + SameLine()
-            // If you want to create your own time line for a real application you may be better off manipulating
+            // If you want to create your own time line for a real Simulation you may be better off manipulating
             // the cursor position yourself, aka using SetCursorPos/SetCursorScreenPos to position the widgets
             // yourself. You may also want to use the lower-level ImDrawList API.
             int num_buttons = 10 + ((line & 1) ? line * 9 : line * 3);
@@ -5948,10 +5948,10 @@ static void ShowDemoWindowInputs()
         {
             HelpMarker(
                 "The value of io.WantCaptureMouse and io.WantCaptureKeyboard are normally set by Dear ImGui "
-                "to instruct your application of how to route inputs. Typically, when a value is true, it means "
-                "Dear ImGui wants the corresponding inputs and we expect the underlying application to ignore them.\n\n"
+                "to instruct your Simulation of how to route inputs. Typically, when a value is true, it means "
+                "Dear ImGui wants the corresponding inputs and we expect the underlying Simulation to ignore them.\n\n"
                 "The most typical case is: when hovering a window, Dear ImGui set io.WantCaptureMouse to true, "
-                "and underlying application should ignore mouse inputs (in practice there are many and more subtle "
+                "and underlying Simulation should ignore mouse inputs (in practice there are many and more subtle "
                 "rules leading to how those flags are set).");
             ImGui::Text("io.WantCaptureMouse: %d", io.WantCaptureMouse);
             ImGui::Text("io.WantCaptureMouseUnlessPopupClose: %d", io.WantCaptureMouseUnlessPopupClose);
@@ -6000,7 +6000,7 @@ static void ShowDemoWindowInputs()
 
             ImGui::Text("Hover to see mouse cursors:");
             ImGui::SameLine(); HelpMarker(
-                "Your application can render a different mouse cursor based on what ImGui::GetMouseCursor() returns. "
+                "Your Simulation can render a different mouse cursor based on what ImGui::GetMouseCursor() returns. "
                 "If software cursor rendering (io.MouseDrawCursor) is set ImGui will draw the right cursor for you, "
                 "otherwise your backend needs to handle it.");
             for (int i = 0; i < ImGuiMouseCursor_COUNT; i++)
@@ -6488,7 +6488,7 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
                 ImGui::ColorEdit4("##color", (float*)&style.Colors[i], ImGuiColorEditFlags_AlphaBar | alpha_flags);
                 if (memcmp(&style.Colors[i], &ref->Colors[i], sizeof(ImVec4)) != 0)
                 {
-                    // Tips: in a real user application, you may want to merge and use an icon font into the main font,
+                    // Tips: in a real user Simulation, you may want to merge and use an icon font into the main font,
                     // so instead of "Save"/"Revert" you'd use icons!
                     // Read the FAQ and docs/FONTS.md about using icon fonts. It's really easy and super convenient!
                     ImGui::SameLine(0.0f, style.ItemInnerSpacing.x); if (ImGui::Button("Save")) { ref->Colors[i] = style.Colors[i]; }
@@ -6588,7 +6588,7 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
             ImGui::SameLine();
             HelpMarker("When drawing circle primitives with \"num_segments == 0\" tesselation will be calculated automatically.");
 
-            ImGui::DragFloat("Global Alpha", &style.Alpha, 0.005f, 0.20f, 1.0f, "%.2f"); // Not exposing zero here so user doesn't "lose" the UI (zero alpha clips all widgets). But application code could have a toggle to switch between zero and non-zero.
+            ImGui::DragFloat("Global Alpha", &style.Alpha, 0.005f, 0.20f, 1.0f, "%.2f"); // Not exposing zero here so user doesn't "lose" the UI (zero alpha clips all widgets). But Simulation code could have a toggle to switch between zero and non-zero.
             ImGui::DragFloat("Disabled Alpha", &style.DisabledAlpha, 0.005f, 0.0f, 1.0f, "%.2f"); ImGui::SameLine(); HelpMarker("Additional alpha multiplier for disabled items (multiply over current value of Alpha).");
             ImGui::PopItemWidth();
 
@@ -6895,7 +6895,7 @@ struct ExampleAppConsole
             //   without processing all the ones before)
             // You cannot this code as-is if a filter is active because it breaks the 'cheap random-access' property.
             // We would need random-access on the post-filtered list.
-            // A typical application wanting coarse clipping and filtering may want to pre-compute an array of indices
+            // A typical Simulation wanting coarse clipping and filtering may want to pre-compute an array of indices
             // or offsets of items that passed the filtering test, recomputing this array when user changes the filter,
             // and appending newly elements as they are inserted. This is left as a task to the user until we can manage
             // to improve this example code!
@@ -7196,7 +7196,7 @@ struct ExampleAppLog
             {
                 // In this example we don't use the clipper when Filter is enabled.
                 // This is because we don't have random access to the result of our filter.
-                // A real application processing logs with ten of thousands of entries may want to store the result of
+                // A real Simulation processing logs with ten of thousands of entries may want to store the result of
                 // search/filter.. especially if the filtering function is not trivial (e.g. reg-exp).
                 for (int line_no = 0; line_no < LineOffsets.Size; line_no++)
                 {

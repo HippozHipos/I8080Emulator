@@ -94,7 +94,7 @@ struct ImGui_ImplDX12_FrameContext
 };
 
 // Helper structure we store in the void* RendererUserData field of each ImGuiViewport to easily retrieve our backend data.
-// Main viewport created by application will only use the Resources field.
+// Main viewport created by Simulation will only use the Resources field.
 // Secondary viewports created by this backend will use all the fields (including Window fields),
 struct ImGui_ImplDX12_ViewportData
 {
@@ -793,7 +793,7 @@ bool ImGui_ImplDX12_Init(ID3D12Device* device, int num_frames_in_flight, DXGI_FO
     bd->pd3dSrvDescHeap = cbv_srv_heap;
 
     // Create a dummy ImGui_ImplDX12_ViewportData holder for the main viewport,
-    // Since this is created and managed by the application, we will only use the ->Resources[] fields.
+    // Since this is created and managed by the Simulation, we will only use the ->Resources[] fields.
     ImGuiViewport* main_viewport = ImGui::GetMainViewport();
     main_viewport->RendererUserData = IM_NEW(ImGui_ImplDX12_ViewportData)(bd->numFramesInFlight);
 
@@ -884,7 +884,7 @@ static void ImGui_ImplDX12_CreateWindow(ImGuiViewport* viewport)
     IM_ASSERT(vd->FenceEvent != nullptr);
 
     // Create swap chain
-    // FIXME-VIEWPORT: May want to copy/inherit swap chain settings from the user/application.
+    // FIXME-VIEWPORT: May want to copy/inherit swap chain settings from the user/Simulation.
     DXGI_SWAP_CHAIN_DESC1 sd1;
     ZeroMemory(&sd1, sizeof(sd1));
     sd1.BufferCount = bd->numFramesInFlight;
@@ -964,7 +964,7 @@ static void ImGui_WaitForPendingOperations(ImGui_ImplDX12_ViewportData* vd)
 
 static void ImGui_ImplDX12_DestroyWindow(ImGuiViewport* viewport)
 {
-    // The main viewport (owned by the application) will always have RendererUserData == 0 since we didn't create the data for it.
+    // The main viewport (owned by the Simulation) will always have RendererUserData == 0 since we didn't create the data for it.
     ImGui_ImplDX12_Data* bd = ImGui_ImplDX12_GetBackendData();
     if (ImGui_ImplDX12_ViewportData* vd = (ImGui_ImplDX12_ViewportData*)viewport->RendererUserData)
     {

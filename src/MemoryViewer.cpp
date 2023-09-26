@@ -38,10 +38,40 @@ void MemoryViewer::draw_memory_viewer()
 	m_CPU_Ram_Memory.DrawWindow("RAM", m_Memory->data(), 0xFFFF);
 }
 
+void MemoryViewer::draw_register_info()
+{
+	ImGui::Begin("CPU Info");
+	*cpu->A;
+	*cpu->B;
+	*cpu->C;
+	*cpu->BC;
+	*cpu->D;
+	*cpu->A;
+
+	ImGui::End();
+}
+
+void MemoryViewer::draw_last_exec_opcodes()
+{
+	ImGui::Begin("Last Instructions");
+	for (size_t i = 0; i < last128opcodes.size(); i++)
+	{
+		ImGui::Text(last128opcodes.at(i).c_str());
+	}
+	
+	ImGui::End();
+}
+
 void MemoryViewer::draw_debugger()
 {
 }
 
 void MemoryViewer::draw_emulator_screen()
 {
+}
+
+void MemoryViewer::addToOpcodesDeque(string opcode)
+{
+	if (last128opcodes.size() == 128) last128opcodes.pop_front();
+	last128opcodes.emplace_back(opcode);
 }

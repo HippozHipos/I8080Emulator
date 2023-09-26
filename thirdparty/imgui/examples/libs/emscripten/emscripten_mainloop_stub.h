@@ -1,5 +1,5 @@
 // What does this file solves?
-// - Since Dear ImGui 1.00 we took pride that most of our examples applications had their entire
+// - Since Dear ImGui 1.00 we took pride that most of our examples Simulations had their entire
 //   main-loop inside the main() function. That's because:
 //   - It makes the examples easier to read, keeping the code sequential.
 //   - It permit the use of local variables, making it easier to try things and perform quick
@@ -12,7 +12,7 @@
 // - Only some of our examples would run on Emscripten. Typically the ones rendering with GL or WGPU ones.
 // - I tried to refactor those examples but felt it was problematic that other examples didn't follow the
 //   same layout. Why would the SDL+GL example be structured one way and the SGL+DX11 be structured differently?
-//   Especially as we are trying hard to convey that using a Dear ImGui backend in an *existing application*
+//   Especially as we are trying hard to convey that using a Dear ImGui backend in an *existing Simulation*
 //   should requires only a few dozens lines of code, and this should be consistent and symmetrical for all backends.
 // - So the next logical step was to refactor all examples to follow that layout of using a "main loop" function.
 //   This worked, but it made us lose all the nice things we had...

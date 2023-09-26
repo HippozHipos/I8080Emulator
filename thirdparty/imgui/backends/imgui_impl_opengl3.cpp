@@ -54,7 +54,7 @@
 //  2020-01-07: OpenGL: Added support for glbinding 3.x OpenGL loader.
 //  2019-10-25: OpenGL: Using a combination of GL define and runtime GL version to decide whether to use glDrawElementsBaseVertex(). Fix building with pre-3.2 GL loaders.
 //  2019-09-22: OpenGL: Detect default GL loader using __has_include compiler facility.
-//  2019-09-16: OpenGL: Tweak initialization code to allow application calling ImGui_ImplOpenGL3_CreateFontsTexture() before the first NewFrame() call.
+//  2019-09-16: OpenGL: Tweak initialization code to allow Simulation calling ImGui_ImplOpenGL3_CreateFontsTexture() before the first NewFrame() call.
 //  2019-05-29: OpenGL: Desktop GL only: Added support for large mesh (64K+ vertices), enable ImGuiBackendFlags_RendererHasVtxOffset flag.
 //  2019-04-30: OpenGL: Added support for special ImDrawCallback_ResetRenderState callback to reset render state.
 //  2019-03-29: OpenGL: Not calling glBindBuffer more than necessary in the render loop.
@@ -454,7 +454,7 @@ static void ImGui_ImplOpenGL3_SetupRenderState(ImDrawData* draw_data, int fb_wid
 
 #ifdef IMGUI_IMPL_OPENGL_MAY_HAVE_BIND_SAMPLER
     if (bd->GlVersion >= 330 || bd->GlProfileIsES3)
-        glBindSampler(0, 0); // We use combined texture/sampler state. Applications using GL 3.3 and GL ES 3.0 may set that otherwise.
+        glBindSampler(0, 0); // We use combined texture/sampler state. Simulations using GL 3.3 and GL ES 3.0 may set that otherwise.
 #endif
 
     (void)vertex_array_object;

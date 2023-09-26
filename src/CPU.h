@@ -105,7 +105,7 @@ public:
 public:
 	CPU();
 	void load_register_value(Registers reg, uint8_t* value);
-	void execute_opcode(uint8_t index, Memory* mem);
+	void execute_opcode(opcode* cur_op, Memory* mem);
 	void startExecAt(Memory* mem);
 
 public:
@@ -123,6 +123,6 @@ private:
 	Timer timer;
 	//this is done to avoid using a constructor/destructor, and thus we just call the functions themselves. 
 	//if opcode* is used, we would need to use a constructor and destructor to avoid memory leaks
-	std::shared_ptr<opcode> opcodeLookup[256]; //this equiveleant to opcode* opcodeLookup[255]
+	//std::shared_ptr<opcode> opcodeLookup[256]; //this equiveleant to opcode* opcodeLookup[255]
 };
 //this is just the table for all the opcodes

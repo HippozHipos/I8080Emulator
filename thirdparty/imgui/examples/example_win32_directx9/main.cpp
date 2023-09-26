@@ -1,4 +1,4 @@
-// Dear ImGui: standalone example application for DirectX 9
+// Dear ImGui: standalone example Simulation for DirectX 9
 // If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of imgui.cpp.
 // Read online: https://github.com/ocornut/imgui/tree/master/docs
 
@@ -23,7 +23,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 // Main code
 int main(int, char**)
 {
-    // Create application window
+    // Create Simulation window
     //ImGui_ImplWin32_EnableDpiAwareness();
     WNDCLASSEXW wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"ImGui Example", nullptr };
     ::RegisterClassExW(&wc);
@@ -71,7 +71,7 @@ int main(int, char**)
     // Load Fonts
     // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
     // - AddFontFromFileTTF() will return the ImFont* so you can store it if you need to select the font among multiple.
-    // - If the file cannot be loaded, the function will return a nullptr. Please handle those errors in your application (e.g. use an assertion, or display an error and quit).
+    // - If the file cannot be loaded, the function will return a nullptr. Please handle those errors in your Simulation (e.g. use an assertion, or display an error and quit).
     // - The fonts will be rasterized at a given size (w/ oversampling) and stored into a texture when calling ImFontAtlas::Build()/GetTexDataAsXXXX(), which ImGui_ImplXXXX_NewFrame below will call.
     // - Use '#define IMGUI_ENABLE_FREETYPE' in your imconfig file to use Freetype for higher quality font rendering.
     // - Read 'docs/FONTS.md' for more instructions and details.
@@ -143,7 +143,7 @@ int main(int, char**)
             ImGui::SameLine();
             ImGui::Text("counter = %d", counter);
 
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+            ImGui::Text("Simulation average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::End();
         }
 
@@ -241,9 +241,9 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 // Win32 message handler
 // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
-// - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
-// - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
-// Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
+// - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main Simulation, or clear/overwrite your copy of the mouse data.
+// - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main Simulation, or clear/overwrite your copy of the keyboard data.
+// Generally you may always pass all inputs to dear imgui, and hide them from your Simulation based on those two flags.
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
@@ -258,7 +258,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
         g_ResizeHeight = (UINT)HIWORD(lParam);
         return 0;
     case WM_SYSCOMMAND:
-        if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT application menu
+        if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT Simulation menu
             return 0;
         break;
     case WM_DESTROY:

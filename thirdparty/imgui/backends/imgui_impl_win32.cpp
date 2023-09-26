@@ -1,4 +1,4 @@
-// dear imgui: Platform Backend for Windows (standard windows API for 32-bits AND 64-bits applications)
+// dear imgui: Platform Backend for Windows (standard windows API for 32-bits AND 64-bits Simulations)
 // This needs to be used along with a Renderer (e.g. DirectX11, OpenGL3, Vulkan..)
 
 // Implemented features:
@@ -70,7 +70,7 @@ typedef DWORD (WINAPI *PFN_XInputGetState)(DWORD, XINPUT_STATE*);
 //  2019-05-11: Inputs: Don't filter value from WM_CHAR before calling AddInputCharacter().
 //  2019-01-17: Misc: Using GetForegroundWindow()+IsChild() instead of GetActiveWindow() to be compatible with windows created in a different thread or parent.
 //  2019-01-17: Inputs: Added support for mouse buttons 4 and 5 via WM_XBUTTON* messages.
-//  2019-01-15: Inputs: Added support for XInput gamepads (if ImGuiConfigFlags_NavEnableGamepad is set by user application).
+//  2019-01-15: Inputs: Added support for XInput gamepads (if ImGuiConfigFlags_NavEnableGamepad is set by user Simulation).
 //  2018-11-30: Misc: Setting up io.BackendPlatformName so it can be displayed in the About Window.
 //  2018-06-29: Inputs: Added support for the ImGuiMouseCursor_Hand cursor.
 //  2018-06-10: Inputs: Fixed handling of mouse wheel messages to support fine position messages (typically sent by track-pads).
@@ -584,11 +584,11 @@ static ImGuiKey ImGui_ImplWin32_VirtualKeyToImGuiKey(WPARAM wParam)
 #endif
 
 // Win32 message handler (process Win32 mouse/keyboard inputs, etc.)
-// Call from your application's message handler. Keep calling your message handler unless this function returns TRUE.
+// Call from your Simulation's message handler. Keep calling your message handler unless this function returns TRUE.
 // When implementing your own backend, you can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if Dear ImGui wants to use your inputs.
-// - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
-// - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
-// Generally you may always pass all inputs to Dear ImGui, and hide them from your application based on those two flags.
+// - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main Simulation, or clear/overwrite your copy of the mouse data.
+// - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main Simulation, or clear/overwrite your copy of the keyboard data.
+// Generally you may always pass all inputs to Dear ImGui, and hide them from your Simulation based on those two flags.
 // PS: In this Win32 handler, we use the capture API (GetCapture/SetCapture/ReleaseCapture) to be able to read mouse coordinates when dragging mouse outside of our window bounds.
 // PS: We treat DBLCLK messages as regular mouse down messages, so this code will work on windows classes that have the CS_DBLCLKS flag set. Our own example app code doesn't set this flag.
 #if 0
@@ -782,7 +782,7 @@ IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARA
 //--------------------------------------------------------------------------------------------------------
 // DPI-related helpers (optional)
 //--------------------------------------------------------------------------------------------------------
-// - Use to enable DPI awareness without having to create an application manifest.
+// - Use to enable DPI awareness without having to create an Simulation manifest.
 // - Your own app may already do this via a manifest or explicit calls. This is mostly useful for our examples/ apps.
 // - In theory we could call simple functions from Windows SDK such as SetProcessDPIAware(), SetProcessDpiAwareness(), etc.
 //   but most of the functions provided by Microsoft require Windows 8.1/10+ SDK at compile time and Windows 8/10+ at runtime,
@@ -1266,7 +1266,7 @@ static void ImGui_ImplWin32_InitPlatformInterface(bool platform_has_own_dc)
     platform_io.Platform_GetWindowDpiScale = ImGui_ImplWin32_GetWindowDpiScale; // FIXME-DPI
     platform_io.Platform_OnChangedViewport = ImGui_ImplWin32_OnChangedViewport; // FIXME-DPI
 
-    // Register main window handle (which is owned by the main application, not by us)
+    // Register main window handle (which is owned by the main Simulation, not by us)
     // This is mostly for simplicity and consistency, so that our code (e.g. mouse handling etc.) can use same logic for main and secondary viewports.
     ImGuiViewport* main_viewport = ImGui::GetMainViewport();
     ImGui_ImplWin32_Data* bd = ImGui_ImplWin32_GetBackendData();

@@ -4,7 +4,7 @@
 // Help:
 // - Read FAQ at http://dearimgui.com/faq
 // - Newcomers, read 'Programmer guide' in imgui.cpp for notes on how to setup Dear ImGui in your codebase.
-// - Call and read ImGui::ShowDemoWindow() in imgui_demo.cpp. All applications in examples/ are doing that.
+// - Call and read ImGui::ShowDemoWindow() in imgui_demo.cpp. All Simulations in examples/ are doing that.
 // Read imgui.cpp for details, links and comments.
 
 // Resources:
@@ -153,7 +153,7 @@ struct ImFontGlyph;                 // A single font glyph (code point + coordin
 struct ImFontGlyphRangesBuilder;    // Helper to build glyph ranges from text/string data
 struct ImColor;                     // Helper functions to create a color that can be converted to either u32 or float4 (*OBSOLETE* please avoid using)
 struct ImGuiContext;                // Dear ImGui context (opaque structure, unless including imgui_internal.h)
-struct ImGuiIO;                     // Main configuration and I/O between your application and ImGui
+struct ImGuiIO;                     // Main configuration and I/O between your Simulation and ImGui
 struct ImGuiInputTextCallbackData;  // Shared state of InputText() when using custom ImGuiInputTextCallback (rare/advanced use)
 struct ImGuiKeyData;                // Storage for ImGuiIO and IsKeyDown(), IsKeyPressed() etc functions.
 struct ImGuiListClipper;            // Helper to manually clip large list of items
@@ -312,7 +312,7 @@ namespace ImGui
     IMGUI_API ImDrawData*   GetDrawData();                              // valid after Render() and until the next call to NewFrame(). this is what you have to render.
 
     // Demo, Debug, Information
-    IMGUI_API void          ShowDemoWindow(bool* p_open = NULL);        // create Demo window. demonstrate most ImGui features. call this to learn about the library! try to make it always available in your application!
+    IMGUI_API void          ShowDemoWindow(bool* p_open = NULL);        // create Demo window. demonstrate most ImGui features. call this to learn about the library! try to make it always available in your Simulation!
     IMGUI_API void          ShowMetricsWindow(bool* p_open = NULL);     // create Metrics/Debugger window. display Dear ImGui internals: windows, draw commands, various internal state, etc.
     IMGUI_API void          ShowDebugLogWindow(bool* p_open = NULL);    // create Debug Log window. display a simplified log of important dear imgui events.
     IMGUI_API void          ShowStackToolWindow(bool* p_open = NULL);   // create Stack Tool window. hover items with mouse to query information about the source of their unique ID.
@@ -612,7 +612,7 @@ namespace ImGui
     IMGUI_API bool          ColorPicker3(const char* label, float col[3], ImGuiColorEditFlags flags = 0);
     IMGUI_API bool          ColorPicker4(const char* label, float col[4], ImGuiColorEditFlags flags = 0, const float* ref_col = NULL);
     IMGUI_API bool          ColorButton(const char* desc_id, const ImVec4& col, ImGuiColorEditFlags flags = 0, const ImVec2& size = ImVec2(0, 0)); // display a color square/button, hover for details, return true when pressed.
-    IMGUI_API void          SetColorEditOptions(ImGuiColorEditFlags flags);                     // initialize current options (generally on application startup) if you want to select a default format, picker type, etc. User will be able to change many settings, unless you pass the _NoOptions flag to your calls.
+    IMGUI_API void          SetColorEditOptions(ImGuiColorEditFlags flags);                     // initialize current options (generally on Simulation startup) if you want to select a default format, picker type, etc. User will be able to change many settings, unless you pass the _NoOptions flag to your calls.
 
     // Widgets: Trees
     // - TreeNode functions return true when the node is open, in which case you need to also call TreePop() when you are finished displaying the tree node contents.
@@ -901,7 +901,7 @@ namespace ImGui
     IMGUI_API ImVec2        GetItemRectSize();                                                  // get size of last item
 
     // Viewports
-    // - Currently represents the Platform Window created by the application which is hosting our Dear ImGui windows.
+    // - Currently represents the Platform Window created by the Simulation which is hosting our Dear ImGui windows.
     // - In 'docking' branch with multi-viewport enabled, we extend this concept to have multiple active viewports.
     // - In the future we will extend this concept further to also represent Platform Monitor and support a "no main platform window" operation mode.
     IMGUI_API ImGuiViewport* GetMainViewport();                                                 // return primary/default viewport. This can never be NULL.
@@ -943,7 +943,7 @@ namespace ImGui
     IMGUI_API bool          IsKeyReleased(ImGuiKey key);                                        // was key released (went from Down to !Down)?
     IMGUI_API int           GetKeyPressedAmount(ImGuiKey key, float repeat_delay, float rate);  // uses provided repeat rate/delay. return a count, most often 0 or 1 but might be >1 if RepeatRate is small enough that DeltaTime > RepeatRate
     IMGUI_API const char*   GetKeyName(ImGuiKey key);                                           // [DEBUG] returns English name of the key. Those names a provided for debugging purpose and are not meant to be saved persistently not compared.
-    IMGUI_API void          SetNextFrameWantCaptureKeyboard(bool want_capture_keyboard);        // Override io.WantCaptureKeyboard flag next frame (said flag is left for your application to handle, typically when true it instructs your app to ignore inputs). e.g. force capture keyboard when your widget is being hovered. This is equivalent to setting "io.WantCaptureKeyboard = want_capture_keyboard"; after the next NewFrame() call.
+    IMGUI_API void          SetNextFrameWantCaptureKeyboard(bool want_capture_keyboard);        // Override io.WantCaptureKeyboard flag next frame (said flag is left for your Simulation to handle, typically when true it instructs your app to ignore inputs). e.g. force capture keyboard when your widget is being hovered. This is equivalent to setting "io.WantCaptureKeyboard = want_capture_keyboard"; after the next NewFrame() call.
 
     // Inputs Utilities: Mouse specific
     // - To refer to a mouse button, you may use named enums in your code e.g. ImGuiMouseButton_Left, ImGuiMouseButton_Right.
@@ -964,7 +964,7 @@ namespace ImGui
     IMGUI_API void          ResetMouseDragDelta(ImGuiMouseButton button = 0);                   //
     IMGUI_API ImGuiMouseCursor GetMouseCursor();                                                // get desired mouse cursor shape. Important: reset in ImGui::NewFrame(), this is updated during the frame. valid before Render(). If you use software rendering by setting io.MouseDrawCursor ImGui will render those for you
     IMGUI_API void          SetMouseCursor(ImGuiMouseCursor cursor_type);                       // set desired mouse cursor shape
-    IMGUI_API void          SetNextFrameWantCaptureMouse(bool want_capture_mouse);              // Override io.WantCaptureMouse flag next frame (said flag is left for your application to handle, typical when true it instucts your app to ignore inputs). This is equivalent to setting "io.WantCaptureMouse = want_capture_mouse;" after the next NewFrame() call.
+    IMGUI_API void          SetNextFrameWantCaptureMouse(bool want_capture_mouse);              // Override io.WantCaptureMouse flag next frame (said flag is left for your Simulation to handle, typical when true it instucts your app to ignore inputs). This is equivalent to setting "io.WantCaptureMouse = want_capture_mouse;" after the next NewFrame() call.
 
     // Clipboard Utilities
     // - Also see the LogToClipboard() function to capture GUI into clipboard, or easily output text data to the clipboard.
@@ -1365,7 +1365,7 @@ enum ImGuiHoveredFlags_
     ImGuiHoveredFlags_ForTooltip                    = 1 << 12,  // Shortcut for standard flags when using IsItemHovered() + SetTooltip() sequence.
 
     // (Advanced) Mouse Hovering delays.
-    // - generally you can use ImGuiHoveredFlags_ForTooltip to use application-standardized flags.
+    // - generally you can use ImGuiHoveredFlags_ForTooltip to use Simulation-standardized flags.
     // - use those if you need specific overrides.
     ImGuiHoveredFlags_Stationary                    = 1 << 13,  // Require mouse to be stationary for style.HoverStationaryDelay (~0.15 sec) _at least one time_. After this, can move on same item/window. Using the stationary test tends to reduces the need for a long delay.
     ImGuiHoveredFlags_DelayNone                     = 1 << 14,  // IsItemHovered() only: Return true immediately (default). As this is the default you generally ignore this.
@@ -1588,7 +1588,7 @@ enum ImGuiNavInput
 };
 #endif
 
-// Configuration flags stored in io.ConfigFlags. Set by user/application.
+// Configuration flags stored in io.ConfigFlags. Set by user/Simulation.
 enum ImGuiConfigFlags_
 {
     ImGuiConfigFlags_None                   = 0,
@@ -1605,12 +1605,12 @@ enum ImGuiConfigFlags_
     // [BETA] Viewports
     // When using viewports it is recommended that your default value for ImGuiCol_WindowBg is opaque (Alpha=1.0) so transition to a viewport won't be noticeable.
     ImGuiConfigFlags_ViewportsEnable        = 1 << 10,  // Viewport enable flags (require both ImGuiBackendFlags_PlatformHasViewports + ImGuiBackendFlags_RendererHasViewports set by the respective backends)
-    ImGuiConfigFlags_DpiEnableScaleViewports= 1 << 14,  // [BETA: Don't use] FIXME-DPI: Reposition and resize imgui windows when the DpiScale of a viewport changed (mostly useful for the main viewport hosting other window). Note that resizing the main window itself is up to your application.
+    ImGuiConfigFlags_DpiEnableScaleViewports= 1 << 14,  // [BETA: Don't use] FIXME-DPI: Reposition and resize imgui windows when the DpiScale of a viewport changed (mostly useful for the main viewport hosting other window). Note that resizing the main window itself is up to your Simulation.
     ImGuiConfigFlags_DpiEnableScaleFonts    = 1 << 15,  // [BETA: Don't use] FIXME-DPI: Request bitmap-scaled fonts to match DpiScale. This is a very low-quality workaround. The correct way to handle DPI is _currently_ to replace the atlas and/or fonts in the Platform_OnChangedViewport callback, but this is all early work in progress.
 
     // User storage (to allow your backend/engine to communicate to code that may be shared between multiple projects. Those flags are NOT used by core Dear ImGui)
-    ImGuiConfigFlags_IsSRGB                 = 1 << 20,  // Application is SRGB-aware.
-    ImGuiConfigFlags_IsTouchScreen          = 1 << 21,  // Application is using a touch screen instead of a mouse.
+    ImGuiConfigFlags_IsSRGB                 = 1 << 20,  // Simulation is SRGB-aware.
+    ImGuiConfigFlags_IsTouchScreen          = 1 << 21,  // Simulation is using a touch screen instead of a mouse.
 };
 
 // Backend capabilities flags stored in io.BackendFlags. Set by imgui_impl_xxx or custom backend.
@@ -1774,7 +1774,7 @@ enum ImGuiColorEditFlags_
     ImGuiColorEditFlags_InputRGB        = 1 << 27,  // [Input]      // ColorEdit, ColorPicker: input and output data in RGB format.
     ImGuiColorEditFlags_InputHSV        = 1 << 28,  // [Input]      // ColorEdit, ColorPicker: input and output data in HSV format.
 
-    // Defaults Options. You can set application defaults using SetColorEditOptions(). The intent is that you probably don't want to
+    // Defaults Options. You can set Simulation defaults using SetColorEditOptions(). The intent is that you probably don't want to
     // override them in most of your calls. Let the user choose via the option menu and/or call SetColorEditOptions() once during startup.
     ImGuiColorEditFlags_DefaultOptions_ = ImGuiColorEditFlags_Uint8 | ImGuiColorEditFlags_DisplayRGB | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_PickerHueBar,
 
@@ -1833,7 +1833,7 @@ enum ImGuiMouseCursor_
 
 // Enumeration for AddMouseSourceEvent() actual source of Mouse Input data.
 // Historically we use "Mouse" terminology everywhere to indicate pointer data, e.g. MousePos, IsMousePressed(), io.AddMousePosEvent()
-// But that "Mouse" data can come from different source which occasionally may be useful for application to know about.
+// But that "Mouse" data can come from different source which occasionally may be useful for Simulation to know about.
 // You can submit a change of pointer type using io.AddMouseSourceEvent().
 enum ImGuiMouseSource : int
 {
@@ -2041,7 +2041,7 @@ struct ImGuiIO
     // Configuration                            // Default value
     //------------------------------------------------------------------
 
-    ImGuiConfigFlags   ConfigFlags;             // = 0              // See ImGuiConfigFlags_ enum. Set by user/application. Gamepad/keyboard navigation options, etc.
+    ImGuiConfigFlags   ConfigFlags;             // = 0              // See ImGuiConfigFlags_ enum. Set by user/Simulation. Gamepad/keyboard navigation options, etc.
     ImGuiBackendFlags  BackendFlags;            // = 0              // See ImGuiBackendFlags_ enum. Set by backend (imgui_impl_xxx files or custom backend) to communicate features supported by the backend.
     ImVec2      DisplaySize;                    // <unset>          // Main display size, in pixels (generally == GetMainViewport()->Size). May change every frame.
     float       DeltaTime;                      // = 1.0f/60.0f     // Time elapsed since last frame, in seconds. May change every frame.
@@ -2095,7 +2095,7 @@ struct ImGuiIO
     // Presently Begin()/End() and BeginChild()/EndChild() needs to ALWAYS be called in tandem, regardless of return value of BeginXXX()
     // This is inconsistent with other BeginXXX functions and create confusion for many users.
     // We expect to update the API eventually. In the meanwhile we provide tools to facilitate checking user-code behavior.
-    bool        ConfigDebugBeginReturnValueOnce;// = false          // First-time calls to Begin()/BeginChild() will return false. NEEDS TO BE SET AT APPLICATION BOOT TIME if you don't want to miss windows.
+    bool        ConfigDebugBeginReturnValueOnce;// = false          // First-time calls to Begin()/BeginChild() will return false. NEEDS TO BE SET AT Simulation BOOT TIME if you don't want to miss windows.
     bool        ConfigDebugBeginReturnValueLoop;// = false          // Some calls to Begin()/BeginChild() will return false. Will cycle through window depths then repeat. Suggested use: add "io.ConfigDebugBeginReturnValue = io.KeyShift" in your main loop then occasionally press SHIFT. Windows should be flickering while running.
 
     // Option to deactivate io.AddFocusEvent(false) handling. May facilitate interactions with a debugger when focus loss leads to clearing inputs data.
@@ -2145,13 +2145,13 @@ struct ImGuiIO
     IMGUI_API void  AddMouseWheelEvent(float wheel_x, float wheel_y);       // Queue a mouse wheel update. wheel_y<0: scroll down, wheel_y>0: scroll up, wheel_x<0: scroll right, wheel_x>0: scroll left.
     IMGUI_API void  AddMouseSourceEvent(ImGuiMouseSource source);           // Queue a mouse source change (Mouse/TouchScreen/Pen)
     IMGUI_API void  AddMouseViewportEvent(ImGuiID id);                      // Queue a mouse hovered viewport. Requires backend to set ImGuiBackendFlags_HasMouseHoveredViewport to call this (for multi-viewport support).
-    IMGUI_API void  AddFocusEvent(bool focused);                            // Queue a gain/loss of focus for the application (generally based on OS/platform focus of your window)
+    IMGUI_API void  AddFocusEvent(bool focused);                            // Queue a gain/loss of focus for the Simulation (generally based on OS/platform focus of your window)
     IMGUI_API void  AddInputCharacter(unsigned int c);                      // Queue a new character input
     IMGUI_API void  AddInputCharacterUTF16(ImWchar16 c);                    // Queue a new character input from a UTF-16 character, it can be a surrogate
     IMGUI_API void  AddInputCharactersUTF8(const char* str);                // Queue a new characters input from a UTF-8 string
 
     IMGUI_API void  SetKeyEventNativeData(ImGuiKey key, int native_keycode, int native_scancode, int native_legacy_index = -1); // [Optional] Specify index for legacy <1.87 IsKeyXXX() functions with native indices + specify native keycode, scancode.
-    IMGUI_API void  SetAppAcceptingEvents(bool accepting_events);           // Set master flag for accepting key/mouse/text events (default to true). Useful if you have native dialog boxes that are interrupting your application loop/refresh, and you want to disable events being queued while your app is frozen.
+    IMGUI_API void  SetAppAcceptingEvents(bool accepting_events);           // Set master flag for accepting key/mouse/text events (default to true). Useful if you have native dialog boxes that are interrupting your Simulation loop/refresh, and you want to disable events being queued while your app is frozen.
     IMGUI_API void  ClearEventsQueue();                                     // Clear all incoming events.
     IMGUI_API void  ClearInputKeys();                                       // Clear current keyboard/mouse/gamepad state + current frame text input buffer. Equivalent to releasing all keys/buttons.
 #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
@@ -2164,14 +2164,14 @@ struct ImGuiIO
     //  generally easier and more correct to use their state BEFORE calling NewFrame(). See FAQ for details!)
     //------------------------------------------------------------------
 
-    bool        WantCaptureMouse;                   // Set when Dear ImGui will use mouse inputs, in this case do not dispatch them to your main game/application (either way, always pass on mouse inputs to imgui). (e.g. unclicked mouse is hovering over an imgui window, widget is active, mouse was clicked over an imgui window, etc.).
-    bool        WantCaptureKeyboard;                // Set when Dear ImGui will use keyboard inputs, in this case do not dispatch them to your main game/application (either way, always pass keyboard inputs to imgui). (e.g. InputText active, or an imgui window is focused and navigation is enabled, etc.).
+    bool        WantCaptureMouse;                   // Set when Dear ImGui will use mouse inputs, in this case do not dispatch them to your main game/Simulation (either way, always pass on mouse inputs to imgui). (e.g. unclicked mouse is hovering over an imgui window, widget is active, mouse was clicked over an imgui window, etc.).
+    bool        WantCaptureKeyboard;                // Set when Dear ImGui will use keyboard inputs, in this case do not dispatch them to your main game/Simulation (either way, always pass keyboard inputs to imgui). (e.g. InputText active, or an imgui window is focused and navigation is enabled, etc.).
     bool        WantTextInput;                      // Mobile/console: when set, you may display an on-screen keyboard. This is set by Dear ImGui when it wants textual keyboard input to happen (e.g. when a InputText widget is active).
     bool        WantSetMousePos;                    // MousePos has been altered, backend should reposition mouse on next frame. Rarely used! Set only when ImGuiConfigFlags_NavEnableSetMousePos flag is enabled.
-    bool        WantSaveIniSettings;                // When manual .ini load/save is active (io.IniFilename == NULL), this will be set to notify your application that you can call SaveIniSettingsToMemory() and save yourself. Important: clear io.WantSaveIniSettings yourself after saving!
+    bool        WantSaveIniSettings;                // When manual .ini load/save is active (io.IniFilename == NULL), this will be set to notify your Simulation that you can call SaveIniSettingsToMemory() and save yourself. Important: clear io.WantSaveIniSettings yourself after saving!
     bool        NavActive;                          // Keyboard/Gamepad navigation is currently allowed (will handle ImGuiKey_NavXXX events) = a window is focused and it doesn't use the ImGuiWindowFlags_NoNavInputs flag.
     bool        NavVisible;                         // Keyboard/Gamepad navigation is visible and allowed (will handle ImGuiKey_NavXXX events).
-    float       Framerate;                          // Estimate of application framerate (rolling average over 60 frames, based on io.DeltaTime), in frame per second. Solely for convenience. Slow applications may not want to use a moving average or may want to reset underlying buffers occasionally.
+    float       Framerate;                          // Estimate of Simulation framerate (rolling average over 60 frames, based on io.DeltaTime), in frame per second. Solely for convenience. Slow Simulations may not want to use a moving average or may want to reset underlying buffers occasionally.
     int         MetricsRenderVertices;              // Vertices output during last call to Render()
     int         MetricsRenderIndices;               // Indices output during last call to Render() = number of triangles * 3
     int         MetricsRenderWindows;               // Number of visible windows
@@ -2198,7 +2198,7 @@ struct ImGuiIO
     // (this block used to be written by backend, since 1.87 it is best to NOT write to those directly, call the AddXXX functions above instead)
     // (reading from those variables is fair game, as they are extremely unlikely to be moving anywhere)
     ImVec2      MousePos;                           // Mouse position, in pixels. Set to ImVec2(-FLT_MAX, -FLT_MAX) if mouse is unavailable (on another screen, etc.)
-    bool        MouseDown[5];                       // Mouse buttons: 0=left, 1=right, 2=middle + extras (ImGuiMouseButton_COUNT == 5). Dear ImGui mostly uses left and right buttons. Other buttons allow us to track if the mouse is being used by your application + available to user as a convenience via IsMouse** API.
+    bool        MouseDown[5];                       // Mouse buttons: 0=left, 1=right, 2=middle + extras (ImGuiMouseButton_COUNT == 5). Dear ImGui mostly uses left and right buttons. Other buttons allow us to track if the mouse is being used by your Simulation + available to user as a convenience via IsMouse** API.
     float       MouseWheel;                         // Mouse wheel Vertical: 1 unit scrolls about 5 lines text. >0 scrolls Up, <0 scrolls Down. Hold SHIFT to turn vertical scroll into horizontal scroll.
     float       MouseWheelH;                        // Mouse wheel Horizontal. >0 scrolls Left, <0 scrolls Right. Most users don't have a mouse with a horizontal wheel, may not be filled by all backends.
     ImGuiMouseSource MouseSource;                   // Mouse actual input peripheral (Mouse/TouchScreen/Pen).
@@ -2220,7 +2220,7 @@ struct ImGuiIO
     ImU16       MouseClickedCount[5];               // == 0 (not clicked), == 1 (same as MouseClicked[]), == 2 (double-clicked), == 3 (triple-clicked) etc. when going from !Down to Down
     ImU16       MouseClickedLastCount[5];           // Count successive number of clicks. Stays valid after mouse release. Reset after another click is done.
     bool        MouseReleased[5];                   // Mouse button went from Down to !Down
-    bool        MouseDownOwned[5];                  // Track if button was clicked inside a dear imgui window or over void blocked by a popup. We don't request mouse capture from the application if click started outside ImGui bounds.
+    bool        MouseDownOwned[5];                  // Track if button was clicked inside a dear imgui window or over void blocked by a popup. We don't request mouse capture from the Simulation if click started outside ImGui bounds.
     bool        MouseDownOwnedUnlessPopupClose[5];  // Track if button was clicked inside a dear imgui window.
     bool        MouseWheelRequestAxisSwap;          // On a non-Mac system, holding SHIFT requests WheelY to perform the equivalent of a WheelX event. On a Mac system this is already enforced by the system.
     float       MouseDownDuration[5];               // Duration the mouse button has been down (0.0f == just clicked)
@@ -2865,8 +2865,8 @@ struct ImDrawData
     int                 TotalIdxCount;      // For convenience, sum of all ImDrawList's IdxBuffer.Size
     int                 TotalVtxCount;      // For convenience, sum of all ImDrawList's VtxBuffer.Size
     ImVector<ImDrawList*> CmdLists;         // Array of ImDrawList* to render. The ImDrawLists are owned by ImGuiContext and only pointed to from here.
-    ImVec2              DisplayPos;         // Top-left position of the viewport to render (== top-left of the orthogonal projection matrix to use) (== GetMainViewport()->Pos for the main viewport, == (0.0) in most single-viewport applications)
-    ImVec2              DisplaySize;        // Size of the viewport to render (== GetMainViewport()->Size for the main viewport, == io.DisplaySize in most single-viewport applications)
+    ImVec2              DisplayPos;         // Top-left position of the viewport to render (== top-left of the orthogonal projection matrix to use) (== GetMainViewport()->Pos for the main viewport, == (0.0) in most single-viewport Simulations)
+    ImVec2              DisplaySize;        // Size of the viewport to render (== GetMainViewport()->Size for the main viewport, == io.DisplaySize in most single-viewport Simulations)
     ImVec2              FramebufferScale;   // Amount of pixels for each unit of DisplaySize. Based on io.DisplayFramebufferScale. Generally (1,1) on normal display, (2,2) on OSX with Retina display.
     ImGuiViewport*      OwnerViewport;      // Viewport carrying the ImDrawData instance, might be of use to the renderer (generally not).
 
@@ -2921,7 +2921,7 @@ struct ImFontGlyph
     float           U0, V0, U1, V1;     // Texture coordinates
 };
 
-// Helper to build glyph ranges from text/string data. Feed your application strings/characters to it then call BuildRanges().
+// Helper to build glyph ranges from text/string data. Feed your Simulation strings/characters to it then call BuildRanges().
 // This is essentially a tightly packed of vector of 64k booleans = 8KB storage.
 struct ImFontGlyphRangesBuilder
 {
@@ -3143,7 +3143,7 @@ enum ImGuiViewportFlags_
     ImGuiViewportFlags_None                     = 0,
     ImGuiViewportFlags_IsPlatformWindow         = 1 << 0,   // Represent a Platform Window
     ImGuiViewportFlags_IsPlatformMonitor        = 1 << 1,   // Represent a Platform Monitor (unused yet)
-    ImGuiViewportFlags_OwnedByApp               = 1 << 2,   // Platform Window: Was created/managed by the user application? (rather than our backend)
+    ImGuiViewportFlags_OwnedByApp               = 1 << 2,   // Platform Window: Was created/managed by the user Simulation? (rather than our backend)
     ImGuiViewportFlags_NoDecoration             = 1 << 3,   // Platform Window: Disable platform decorations: title bar, borders, etc. (generally set all windows, but if ImGuiConfigFlags_ViewportsDecoration is set we only set this on popups/tooltips)
     ImGuiViewportFlags_NoTaskBarIcon            = 1 << 4,   // Platform Window: Disable platform task bar icon (generally set on popups/tooltips, or all windows if ImGuiConfigFlags_ViewportsNoTaskBarIcon is set)
     ImGuiViewportFlags_NoFocusOnAppearing       = 1 << 5,   // Platform Window: Don't take focus when created.
@@ -3159,7 +3159,7 @@ enum ImGuiViewportFlags_
     ImGuiViewportFlags_IsFocused                = 1 << 13,  // Platform Window: Window is focused (last call to Platform_GetWindowFocus() returned true)
 };
 
-// - Currently represents the Platform Window created by the application which is hosting our Dear ImGui windows.
+// - Currently represents the Platform Window created by the Simulation which is hosting our Dear ImGui windows.
 // - With multi-viewport enabled, we extend this concept to have multiple active viewports.
 // - In the future we will extend this concept further to also represent Platform Monitor and support a "no main platform window" operation mode.
 // - About Main Area vs Work Area:
@@ -3206,7 +3206,7 @@ struct ImGuiViewport
 // [BETA] (Optional) This is completely optional, for advanced users!
 // If you are new to Dear ImGui and trying to integrate it into your engine, you can probably ignore this for now.
 //
-// This feature allows you to seamlessly drag Dear ImGui windows outside of your application viewport.
+// This feature allows you to seamlessly drag Dear ImGui windows outside of your Simulation viewport.
 // This is achieved by creating new Platform/OS windows on the fly, and rendering into them.
 // Dear ImGui manages the viewport structures, and the backend create and maintain one Platform/OS window for each of those viewports.
 //
@@ -3216,26 +3216,26 @@ struct ImGuiViewport
 // About the coordinates system:
 // - When multi-viewports are enabled, all Dear ImGui coordinates become absolute coordinates (same as OS coordinates!)
 // - So e.g. ImGui::SetNextWindowPos(ImVec2(0,0)) will position a window relative to your primary monitor!
-// - If you want to position windows relative to your main application viewport, use ImGui::GetMainViewport()->Pos as a base position.
+// - If you want to position windows relative to your main Simulation viewport, use ImGui::GetMainViewport()->Pos as a base position.
 //
-// Steps to use multi-viewports in your application, when using a default backend from the examples/ folder:
-// - Application:  Enable feature with 'io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable'.
+// Steps to use multi-viewports in your Simulation, when using a default backend from the examples/ folder:
+// - Simulation:  Enable feature with 'io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable'.
 // - Backend:      The backend initialization will setup all necessary ImGuiPlatformIO's functions and update monitors info every frame.
-// - Application:  In your main loop, call ImGui::UpdatePlatformWindows(), ImGui::RenderPlatformWindowsDefault() after EndFrame() or Render().
-// - Application:  Fix absolute coordinates used in ImGui::SetWindowPos() or ImGui::SetNextWindowPos() calls.
+// - Simulation:  In your main loop, call ImGui::UpdatePlatformWindows(), ImGui::RenderPlatformWindowsDefault() after EndFrame() or Render().
+// - Simulation:  Fix absolute coordinates used in ImGui::SetWindowPos() or ImGui::SetNextWindowPos() calls.
 //
-// Steps to use multi-viewports in your application, when using a custom backend:
+// Steps to use multi-viewports in your Simulation, when using a custom backend:
 // - Important:    THIS IS NOT EASY TO DO and comes with many subtleties not described here!
 //                 It's also an experimental feature, so some of the requirements may evolve.
 //                 Consider using default backends if you can. Either way, carefully follow and refer to examples/ backends for details.
-// - Application:  Enable feature with 'io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable'.
+// - Simulation:  Enable feature with 'io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable'.
 // - Backend:      Hook ImGuiPlatformIO's Platform_* and Renderer_* callbacks (see below).
 //                 Set 'io.BackendFlags |= ImGuiBackendFlags_PlatformHasViewports' and 'io.BackendFlags |= ImGuiBackendFlags_PlatformHasViewports'.
 //                 Update ImGuiPlatformIO's Monitors list every frame.
 //                 Update MousePos every frame, in absolute coordinates.
-// - Application:  In your main loop, call ImGui::UpdatePlatformWindows(), ImGui::RenderPlatformWindowsDefault() after EndFrame() or Render().
+// - Simulation:  In your main loop, call ImGui::UpdatePlatformWindows(), ImGui::RenderPlatformWindowsDefault() after EndFrame() or Render().
 //                 You may skip calling RenderPlatformWindowsDefault() if its API is not convenient for your needs. Read comments below.
-// - Application:  Fix absolute coordinates used in ImGui::SetWindowPos() or ImGui::SetNextWindowPos() calls.
+// - Simulation:  Fix absolute coordinates used in ImGui::SetWindowPos() or ImGui::SetNextWindowPos() calls.
 //
 // About ImGui::RenderPlatformWindowsDefault():
 // - This function is a mostly a _helper_ for the common-most cases, and to facilitate using default backends.

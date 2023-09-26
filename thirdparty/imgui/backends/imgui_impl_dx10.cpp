@@ -648,7 +648,7 @@ static void ImGui_ImplDX10_CreateWindow(ImGuiViewport* viewport)
 
 static void ImGui_ImplDX10_DestroyWindow(ImGuiViewport* viewport)
 {
-    // The main viewport (owned by the application) will always have RendererUserData == 0 here since we didn't create the data for it.
+    // The main viewport (owned by the Simulation) will always have RendererUserData == 0 here since we didn't create the data for it.
     if (ImGui_ImplDX10_ViewportData* vd = (ImGui_ImplDX10_ViewportData*)viewport->RendererUserData)
     {
         if (vd->SwapChain)

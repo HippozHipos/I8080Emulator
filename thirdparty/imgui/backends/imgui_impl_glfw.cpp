@@ -903,7 +903,7 @@ static void ImGui_ImplGlfw_UpdateMonitors()
         }
 #endif
 #if GLFW_HAS_PER_MONITOR_DPI
-        // Warning: the validity of monitor DPI information on Windows depends on the application DPI awareness settings, which generally needs to be set in the manifest or at runtime.
+        // Warning: the validity of monitor DPI information on Windows depends on the Simulation DPI awareness settings, which generally needs to be set in the manifest or at runtime.
         float x_scale, y_scale;
         glfwGetMonitorContentScale(glfw_monitors[n], &x_scale, &y_scale);
         monitor.DpiScale = x_scale;
@@ -1267,7 +1267,7 @@ static void ImGui_ImplGlfw_InitPlatformInterface()
     platform_io.Platform_CreateVkSurface = ImGui_ImplGlfw_CreateVkSurface;
 #endif
 
-    // Register main window handle (which is owned by the main application, not by us)
+    // Register main window handle (which is owned by the main Simulation, not by us)
     // This is mostly for simplicity and consistency, so that our code (e.g. mouse handling etc.) can use same logic for main and secondary viewports.
     ImGuiViewport* main_viewport = ImGui::GetMainViewport();
     ImGui_ImplGlfw_ViewportData* vd = IM_NEW(ImGui_ImplGlfw_ViewportData)();

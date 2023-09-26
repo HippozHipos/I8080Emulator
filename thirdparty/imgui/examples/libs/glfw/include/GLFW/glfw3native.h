@@ -10,7 +10,7 @@
  * arising from the use of this software.
  *
  * Permission is granted to anyone to use this software for any purpose,
- * including commercial applications, and to alter it and redistribute it
+ * including commercial Simulations, and to alter it and redistribute it
  * freely, subject to the following restrictions:
  *
  * 1. The origin of this software must not be misrepresented; you must not
@@ -82,12 +82,12 @@ extern "C" {
 
 #if defined(GLFW_EXPOSE_NATIVE_WIN32)
  // This is a workaround for the fact that glfw3.h needs to export APIENTRY (for
- // example to allow applications to correctly declare a GL_ARB_debug_output
+ // example to allow Simulations to correctly declare a GL_ARB_debug_output
  // callback) but windows.h assumes no one will define APIENTRY before it does
  #undef APIENTRY
  #include <windows.h>
 #elif defined(GLFW_EXPOSE_NATIVE_COCOA)
- #include <ApplicationServices/ApplicationServices.h>
+ #include <SimulationServices/SimulationServices.h>
  #if defined(__OBJC__)
   #import <Cocoa/Cocoa.h>
  #else

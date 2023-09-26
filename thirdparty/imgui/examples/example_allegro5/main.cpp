@@ -1,4 +1,4 @@
-// Dear ImGui: standalone example application for Allegro 5
+// Dear ImGui: standalone example Simulation for Allegro 5
 // If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of imgui.cpp.
 // Read online: https://github.com/ocornut/imgui/tree/master/docs
 
@@ -48,7 +48,7 @@ int main(int, char**)
     // Load Fonts
     // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
     // - AddFontFromFileTTF() will return the ImFont* so you can store it if you need to select the font among multiple.
-    // - If the file cannot be loaded, the function will return a nullptr. Please handle those errors in your application (e.g. use an assertion, or display an error and quit).
+    // - If the file cannot be loaded, the function will return a nullptr. Please handle those errors in your Simulation (e.g. use an assertion, or display an error and quit).
     // - The fonts will be rasterized at a given size (w/ oversampling) and stored into a texture when calling ImFontAtlas::Build()/GetTexDataAsXXXX(), which ImGui_ImplXXXX_NewFrame below will call.
     // - Use '#define IMGUI_ENABLE_FREETYPE' in your imconfig file to use Freetype for higher quality font rendering.
     // - Read 'docs/FONTS.md' for more instructions and details.
@@ -71,9 +71,9 @@ int main(int, char**)
     {
         // Poll and handle events (inputs, window resize, etc.)
         // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
-        // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
-        // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
-        // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
+        // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main Simulation, or clear/overwrite your copy of the mouse data.
+        // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main Simulation, or clear/overwrite your copy of the keyboard data.
+        // Generally you may always pass all inputs to dear imgui, and hide them from your Simulation based on those two flags.
         ALLEGRO_EVENT ev;
         while (al_get_next_event(queue, &ev))
         {
@@ -115,7 +115,7 @@ int main(int, char**)
             ImGui::SameLine();
             ImGui::Text("counter = %d", counter);
 
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+            ImGui::Text("Simulation average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::End();
         }
 

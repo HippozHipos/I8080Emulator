@@ -173,7 +173,7 @@ static ImGuiKey ImGui_ImplSDL3_KeycodeToImGuiKey(int keycode)
         case SDLK_RSHIFT: return ImGuiKey_RightShift;
         case SDLK_RALT: return ImGuiKey_RightAlt;
         case SDLK_RGUI: return ImGuiKey_RightSuper;
-        case SDLK_APPLICATION: return ImGuiKey_Menu;
+        case SDLK_Simulation: return ImGuiKey_Menu;
         case SDLK_0: return ImGuiKey_0;
         case SDLK_1: return ImGuiKey_1;
         case SDLK_2: return ImGuiKey_2;
@@ -236,9 +236,9 @@ static void ImGui_ImplSDL3_UpdateKeyModifiers(SDL_Keymod sdl_key_mods)
 }
 
 // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
-// - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
-// - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
-// Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
+// - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main Simulation, or clear/overwrite your copy of the mouse data.
+// - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main Simulation, or clear/overwrite your copy of the keyboard data.
+// Generally you may always pass all inputs to dear imgui, and hide them from your Simulation based on those two flags.
 // If you have multiple SDL events and some of them are not meant to be used by dear imgui, you may need to filter events based on their windowID field.
 bool ImGui_ImplSDL3_ProcessEvent(const SDL_Event* event)
 {
@@ -422,7 +422,7 @@ static bool ImGui_ImplSDL3_Init(SDL_Window* window, SDL_Renderer* renderer, void
 
     // From 2.0.5: Set SDL hint to receive mouse click events on window focus, otherwise SDL doesn't emit the event.
     // Without this, when clicking to gain focus, our widgets wouldn't activate even though they showed as hovered.
-    // (This is unfortunately a global SDL setting, so enabling it might have a side-effect on your application.
+    // (This is unfortunately a global SDL setting, so enabling it might have a side-effect on your Simulation.
     // It is unlikely to make a difference, but if your app absolutely needs to ignore the initial on-focus click:
     // you can ignore SDL_EVENT_MOUSE_BUTTON_DOWN events coming right after a SDL_WINDOWEVENT_FOCUS_GAINED)
     SDL_SetHint(SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, "1");
@@ -640,7 +640,7 @@ static void ImGui_ImplSDL3_UpdateMonitors()
     SDL_DisplayID* displays = SDL_GetDisplays(&display_count);
     for (int n = 0; n < display_count; n++)
     {
-        // Warning: the validity of monitor DPI information on Windows depends on the application DPI awareness settings, which generally needs to be set in the manifest or at runtime.
+        // Warning: the validity of monitor DPI information on Windows depends on the Simulation DPI awareness settings, which generally needs to be set in the manifest or at runtime.
         SDL_DisplayID display_id = displays[n];
         ImGuiPlatformMonitor monitor;
         SDL_Rect r;
@@ -928,7 +928,7 @@ static void ImGui_ImplSDL3_InitPlatformInterface(SDL_Window* window, void* sdl_g
     platform_io.Platform_SetWindowAlpha = ImGui_ImplSDL3_SetWindowAlpha;
     platform_io.Platform_CreateVkSurface = ImGui_ImplSDL3_CreateVkSurface;
 
-    // Register main window handle (which is owned by the main application, not by us)
+    // Register main window handle (which is owned by the main Simulation, not by us)
     // This is mostly for simplicity and consistency, so that our code (e.g. mouse handling etc.) can use same logic for main and secondary viewports.
     ImGuiViewport* main_viewport = ImGui::GetMainViewport();
     ImGui_ImplSDL3_ViewportData* vd = IM_NEW(ImGui_ImplSDL3_ViewportData)();

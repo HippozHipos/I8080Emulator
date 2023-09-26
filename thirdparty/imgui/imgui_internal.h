@@ -1422,7 +1422,7 @@ enum ImGuiInputFlags_
     ImGuiInputFlags_RouteGlobalHigh     = 1 << 11,  // Register route globally (highest priority: unlikely you need to use that: will interfere with every active items)
     ImGuiInputFlags_RouteMask_          = ImGuiInputFlags_RouteFocused | ImGuiInputFlags_RouteGlobal | ImGuiInputFlags_RouteGlobalLow | ImGuiInputFlags_RouteGlobalHigh, // _Always not part of this!
     ImGuiInputFlags_RouteAlways         = 1 << 12,  // Do not register route, poll keys directly.
-    ImGuiInputFlags_RouteUnlessBgFocused= 1 << 13,  // Global routes will not be applied if underlying background/void is focused (== no Dear ImGui windows are focused). Useful for overlay applications.
+    ImGuiInputFlags_RouteUnlessBgFocused= 1 << 13,  // Global routes will not be applied if underlying background/void is focused (== no Dear ImGui windows are focused). Useful for overlay Simulations.
     ImGuiInputFlags_RouteExtraMask_     = ImGuiInputFlags_RouteAlways | ImGuiInputFlags_RouteUnlessBgFocused,
 
     // [Internal] Mask of which function support which flags
@@ -1970,7 +1970,7 @@ struct ImGuiContext
 
     // Inputs
     ImVector<ImGuiInputEvent> InputEventsQueue;                 // Input events which will be trickled/written into IO structure.
-    ImVector<ImGuiInputEvent> InputEventsTrail;                 // Past input events processed in NewFrame(). This is to allow domain-specific application to access e.g mouse/pen trail.
+    ImVector<ImGuiInputEvent> InputEventsTrail;                 // Past input events processed in NewFrame(). This is to allow domain-specific Simulation to access e.g mouse/pen trail.
     ImGuiMouseSource        InputEventsNextMouseSource;
     ImU32                   InputEventsNextEventId;
 

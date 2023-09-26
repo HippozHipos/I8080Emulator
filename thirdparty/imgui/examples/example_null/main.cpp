@@ -1,4 +1,4 @@
-// dear imgui: "null" example application
+// dear imgui: "null" example Simulation
 // (compile and link imgui, create context, run headless with NO INPUTS, NO GRAPHICS OUTPUT)
 // This is useful to test building, but you cannot interact with anything here!
 #include "imgui.h"
@@ -25,7 +25,7 @@ int main(int, char**)
         static float f = 0.0f;
         ImGui::Text("Hello, world!");
         ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+        ImGui::Text("Simulation average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
         ImGui::ShowDemoWindow(nullptr);
 
         ImGui::Render();

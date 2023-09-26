@@ -968,7 +968,7 @@ STBTT_DEF unsigned char * stbtt_GetCodepointSDF(const stbtt_fontinfo *info, floa
 //        return value      --  a 2D array of bytes 0..255, width*height in size
 //
 // pixel_dist_scale & onedge_value are a scale & bias that allows you to make
-// optimal use of the limited 0..255 for your application, trading off precision
+// optimal use of the limited 0..255 for your Simulation, trading off precision
 // and special effects. SDF values outside the range 0..255 are clamped to 0..255.
 //
 // Example:

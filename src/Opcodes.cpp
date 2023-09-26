@@ -13,6 +13,13 @@ static void setFlags(CPU* cpu, uint16_t reg, uint16_t reg2 = 0)
     //cpu->flags.AC = ac_flagADD(cpu->A, cpu->B);
 }
 */
+/*
+
+Add a function called dissasemble_opcode_data(), it will make your life easier, as we just need to print that out next.
+
+
+*/
+
 
 static void setZ(CPU* cpu, uint16_t a) 
 {

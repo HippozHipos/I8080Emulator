@@ -62,7 +62,7 @@ public:
 	//we are template specialising in ByteSize<Bytes>::Type, currently this is being resolved to ByteSize<1> -> ByteSize<uint8_t>
 	//DataLoc -> DefaultType -> Type::ALL -> we have full address scope of memory.
 	template<uint8_t Bytes = 1, Type DataLoc = DefaultType>
-	ByteSize<Bytes>::Type DirectReadBytes(Ptr offset, ErrorCode& e)
+	typename ByteSize<Bytes>::Type DirectReadBytes(Ptr offset, ErrorCode& e)
 	{
 		//if the memory we are trying to access is outside of the addressable range, 
 		if (!AdressableRangeCheck(GetLwrBnd<DataLoc>() + offset + Bytes, e))
@@ -119,7 +119,7 @@ public:
 	//PtrBytes: How many bytes is the pointer
 	//DataBytes: How many byes of data to read - can be 1, 2 or 4
 	template<uint8_t PtrBytes = DefaultBytes, uint8_t DataBytes = 1, Type PtrLoc = DefaultType, Type DataLoc = DefaultType>
-	ByteSize<DataBytes>::Type IndirectReadBytes(Ptr offset, ErrorCode& e)
+	typename ByteSize<DataBytes>::Type IndirectReadBytes(Ptr offset, ErrorCode& e)
 	{
 		typename ByteSize<PtrBytes>::Type adr = DirectReadBytes<PtrBytes, PtrLoc>(offset, e);
 		typename ByteSize<DataBytes>::Type data = DirectReadBytes<DataBytes, DataLoc>(adr, e);
@@ -155,8 +155,9 @@ public:
 	}
 
 	//WRITE ANY NUMBER OF BYTES OF DATA. NOT TESTED, TEST BEFORE USE
+	
 	template<Type DataLoc = DefaultType>
-	void DirectWriteBytes(Ptr offset, uint8_t* data, Ptr bytes, ErrorCode& e)
+	void DirectWriteAnyBytes(Ptr offset, uint8_t* data, Ptr bytes, ErrorCode& e)
 	{
 		if (!AdressableRangeCheck(GetLwrBnd<DataLoc>() + offset + bytes, e))
 		{
@@ -183,7 +184,7 @@ public:
 	//How many bytes to join
 	//join the bytes in reverse order?
 	template<uint8_t Bytes = DefaultBytes, Type DataLoc = DefaultType, bool Reverse = true>
-	ByteSize<Bytes>::Type JoinBytes(Ptr offset)
+	typename ByteSize<Bytes>::Type JoinBytes(Ptr offset)
 	{
 		if constexpr (Bytes == 1)
 		{
@@ -229,7 +230,7 @@ private:
 private:
 	bool AdressableRangeCheck(int p, ErrorCode& e);
 
-private:
+public:
 	template<Type T> constexpr uint16_t GetLwrBnd()
 	{
 		if constexpr (T == Type::RAM)		return RAMLwrBnd;

@@ -1,4 +1,4 @@
-// dear imgui: standalone example application for Android + OpenGL ES 3
+// dear imgui: standalone example Simulation for Android + OpenGL ES 3
 // If you are new to dear imgui, see examples/README.txt and documentation at the top of imgui.cpp.
 
 #include "imgui.h"
@@ -148,7 +148,7 @@ void Init(struct android_app* app)
 
     // Load Fonts
     // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
-    // - If the file cannot be loaded, the function will return a nullptr. Please handle those errors in your application (e.g. use an assertion, or display an error and quit).
+    // - If the file cannot be loaded, the function will return a nullptr. Please handle those errors in your Simulation (e.g. use an assertion, or display an error and quit).
     // - The fonts will be rasterized at a given size (w/ oversampling) and stored into a texture when calling ImFontAtlas::Build()/GetTexDataAsXXXX(), which ImGui_ImplXXXX_NewFrame below will call.
     // - Read 'docs/FONTS.md' for more instructions and details.
     // - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
@@ -236,7 +236,7 @@ void MainLoopStep()
         ImGui::SameLine();
         ImGui::Text("counter = %d", counter);
 
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+        ImGui::Text("Simulation average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
         ImGui::End();
     }
 

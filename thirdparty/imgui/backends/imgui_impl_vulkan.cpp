@@ -606,7 +606,7 @@ void ImGui_ImplVulkan_RenderDrawData(ImDrawData* draw_data, VkCommandBuffer comm
     }
 
     // Note: at this point both vkCmdSetViewport() and vkCmdSetScissor() have been called.
-    // Our last values will leak into user/application rendering IF:
+    // Our last values will leak into user/Simulation rendering IF:
     // - Your app uses a pipeline with VK_DYNAMIC_STATE_VIEWPORT or VK_DYNAMIC_STATE_SCISSOR dynamic state
     // - And you forgot to call vkCmdSetViewport() and vkCmdSetScissor() yourself to explicitly set that state.
     // If you use VK_DYNAMIC_STATE_VIEWPORT or VK_DYNAMIC_STATE_SCISSOR you are responsible for setting the values before rendering.
@@ -1606,7 +1606,7 @@ static void ImGui_ImplVulkan_CreateWindow(ImGuiViewport* viewport)
 
 static void ImGui_ImplVulkan_DestroyWindow(ImGuiViewport* viewport)
 {
-    // The main viewport (owned by the application) will always have RendererUserData == 0 since we didn't create the data for it.
+    // The main viewport (owned by the Simulation) will always have RendererUserData == 0 since we didn't create the data for it.
     ImGui_ImplVulkan_Data* bd = ImGui_ImplVulkan_GetBackendData();
     if (ImGui_ImplVulkan_ViewportData* vd = (ImGui_ImplVulkan_ViewportData*)viewport->RendererUserData)
     {

@@ -1,4 +1,4 @@
-// dear imgui: Platform Backend for Windows (standard windows API for 32-bits AND 64-bits applications)
+// dear imgui: Platform Backend for Windows (standard windows API for 32-bits AND 64-bits Simulations)
 // This needs to be used along with a Renderer (e.g. DirectX11, OpenGL3, Vulkan..)
 
 // Implemented features:
@@ -23,17 +23,17 @@ IMGUI_IMPL_API bool     ImGui_ImplWin32_InitForOpenGL(void* hwnd);
 IMGUI_IMPL_API void     ImGui_ImplWin32_Shutdown();
 IMGUI_IMPL_API void     ImGui_ImplWin32_NewFrame();
 
-// Win32 message handler your application need to call.
+// Win32 message handler your Simulation need to call.
 // - Intentionally commented out in a '#if 0' block to avoid dragging dependencies on <windows.h> from this helper.
 // - You should COPY the line below into your .cpp code to forward declare the function and then you can call it.
-// - Call from your application's message handler. Keep calling your message handler unless this function returns TRUE.
+// - Call from your Simulation's message handler. Keep calling your message handler unless this function returns TRUE.
 
 #if 0
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 #endif
 
 // DPI-related helpers (optional)
-// - Use to enable DPI awareness without having to create an application manifest.
+// - Use to enable DPI awareness without having to create an Simulation manifest.
 // - Your own app may already do this via a manifest or explicit calls. This is mostly useful for our examples/ apps.
 // - In theory we could call simple functions from Windows SDK such as SetProcessDPIAware(), SetProcessDpiAwareness(), etc.
 //   but most of the functions provided by Microsoft require Windows 8.1/10+ SDK at compile time and Windows 8/10+ at runtime,

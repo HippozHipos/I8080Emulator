@@ -10,7 +10,7 @@
  * arising from the use of this software.
  *
  * Permission is granted to anyone to use this software for any purpose,
- * including commercial applications, and to alter it and redistribute it
+ * including commercial Simulations, and to alter it and redistribute it
  * freely, subject to the following restrictions:
  *
  * 1. The origin of this software must not be misrepresented; you must not
@@ -176,7 +176,7 @@ extern "C" {
 #endif
 
 #if defined(GLFW_DLL) && defined(_GLFW_BUILD_DLL)
- /* GLFW_DLL must be defined by applications that are linking against the DLL
+ /* GLFW_DLL must be defined by Simulations that are linking against the DLL
   * version of the GLFW library.  _GLFW_BUILD_DLL is defined by the GLFW
   * configuration header when compiling the DLL version of the library.
   */
@@ -504,7 +504,7 @@ extern "C" {
  *  This occurs if a GLFW function was called that must not be called unless the
  *  library is [initialized](@ref intro_init).
  *
- *  @analysis Application programmer error.  Initialize GLFW before calling any
+ *  @analysis Simulation programmer error.  Initialize GLFW before calling any
  *  function that requires initialization.
  */
 #define GLFW_NOT_INITIALIZED        0x00010001
@@ -514,7 +514,7 @@ extern "C" {
  *  current OpenGL or OpenGL ES context but no context is current on the calling
  *  thread.  One such function is @ref glfwSwapInterval.
  *
- *  @analysis Application programmer error.  Ensure a context is current before
+ *  @analysis Simulation programmer error.  Ensure a context is current before
  *  calling functions that require a current context.
  */
 #define GLFW_NO_CURRENT_CONTEXT     0x00010002
@@ -524,7 +524,7 @@ extern "C" {
  *  requesting [GLFW_RED_BITS](@ref window_hints_fb) with @ref
  *  glfwGetWindowAttrib.
  *
- *  @analysis Application programmer error.  Fix the offending call.
+ *  @analysis Simulation programmer error.  Fix the offending call.
  */
 #define GLFW_INVALID_ENUM           0x00010003
 /*! @brief One of the arguments to the function was an invalid value.
@@ -535,7 +535,7 @@ extern "C" {
  *  Requesting a valid but unavailable OpenGL or OpenGL ES version will instead
  *  result in a @ref GLFW_VERSION_UNAVAILABLE error.
  *
- *  @analysis Application programmer error.  Fix the offending call.
+ *  @analysis Simulation programmer error.  Fix the offending call.
  */
 #define GLFW_INVALID_VALUE          0x00010004
 /*! @brief A memory allocation failed.
@@ -568,7 +568,7 @@ extern "C" {
  *  or framebuffer hints) is not available on this machine.
  *
  *  @analysis The machine does not support your requirements.  If your
- *  application is sufficiently flexible, downgrade your requirements and try
+ *  Simulation is sufficiently flexible, downgrade your requirements and try
  *  again.  Otherwise, inform the user that their machine does not match your
  *  requirements.
  *
@@ -600,7 +600,7 @@ extern "C" {
  *
  *  @analysis If emitted during window creation, one or more
  *  [hard constraints](@ref window_hints_hard) did not match any of the
- *  available pixel formats.  If your application is sufficiently flexible,
+ *  available pixel formats.  If your Simulation is sufficiently flexible,
  *  downgrade your requirements and try again.  Otherwise, inform the user that
  *  their machine does not match your requirements.
  *
@@ -614,7 +614,7 @@ extern "C" {
  *  A window that does not have an OpenGL or OpenGL ES context was passed to
  *  a function that requires it to have one.
  *
- *  @analysis Application programmer error.  Fix the offending call.
+ *  @analysis Simulation programmer error.  Fix the offending call.
  */
 #define GLFW_NO_WINDOW_CONTEXT      0x0001000A
 /*! @} */
@@ -1203,12 +1203,12 @@ typedef struct GLFWimage
 /*! @brief Initializes the GLFW library.
  *
  *  This function initializes the GLFW library.  Before most GLFW functions can
- *  be used, GLFW must be initialized, and before an application terminates GLFW
+ *  be used, GLFW must be initialized, and before an Simulation terminates GLFW
  *  should be terminated in order to free any resources allocated during or
  *  after initialization.
  *
  *  If this function fails, it calls @ref glfwTerminate before returning.  If it
- *  succeeds, you should call @ref glfwTerminate before the application exits.
+ *  succeeds, you should call @ref glfwTerminate before the Simulation exits.
  *
  *  Additional calls to this function after successful initialization but before
  *  termination will return `GLFW_TRUE` immediately.
@@ -1219,7 +1219,7 @@ typedef struct GLFWimage
  *  @errors Possible errors include @ref GLFW_PLATFORM_ERROR.
  *
  *  @remark @osx This function will change the current directory of the
- *  application to the `Contents/Resources` subdirectory of the application's
+ *  Simulation to the `Contents/Resources` subdirectory of the Simulation's
  *  bundle, if present.  This can be disabled with a
  *  [compile-time option](@ref compile_options_osx).
  *
@@ -1242,7 +1242,7 @@ GLFWAPI int glfwInit(void);
  *  you will be able to use most GLFW functions.
  *
  *  If GLFW has been successfully initialized, this function should be called
- *  before the application exits.  If initialization fails, there is no need to
+ *  before the Simulation exits.  If initialization fails, there is no need to
  *  call this function, as it is called by @ref glfwInit before it returns
  *  failure.
  *
@@ -1779,20 +1779,20 @@ GLFWAPI void glfwWindowHint(int hint, int value);
  *  any other thread.
  *
  *  @remark @osx The GLFW window has no icon, as it is not a document
- *  window, but the dock icon will be the same as the application bundle's icon.
+ *  window, but the dock icon will be the same as the Simulation bundle's icon.
  *  For more information on bundles, see the
  *  [Bundle Programming Guide](https://developer.apple.com/library/mac/documentation/CoreFoundation/Conceptual/CFBundles/)
  *  in the Mac Developer Library.
  *
  *  @remark @osx The first time a window is created the menu bar is populated
  *  with common commands like Hide, Quit and About.  The About entry opens
- *  a minimal about dialog with information from the application's bundle.  The
+ *  a minimal about dialog with information from the Simulation's bundle.  The
  *  menu bar can be disabled with a
  *  [compile-time option](@ref compile_options_osx).
  *
  *  @remark @osx On OS X 10.10 and later the window frame will not be rendered
  *  at full resolution on Retina displays unless the `NSHighResolutionCapable`
- *  key is enabled in the application bundle's `Info.plist`.  For more
+ *  key is enabled in the Simulation bundle's `Info.plist`.  For more
  *  information, see
  *  [High Resolution Guidelines for OS X](https://developer.apple.com/library/mac/documentation/GraphicsAnimation/Conceptual/HighResolutionOSX/Explained/Explained.html)
  *  in the Mac Developer Library.  The GLFW test and example programs use
@@ -1942,7 +1942,7 @@ GLFWAPI void glfwSetWindowTitle(GLFWwindow* window, const char* title);
  *  returns.
  *
  *  @remark @osx The GLFW window has no icon, as it is not a document
- *  window, but the dock icon will be the same as the application bundle's icon.
+ *  window, but the dock icon will be the same as the Simulation bundle's icon.
  *  For more information on bundles, see the
  *  [Bundle Programming Guide](https://developer.apple.com/library/mac/documentation/CoreFoundation/Conceptual/CFBundles/)
  *  in the Mac Developer Library.
@@ -2356,7 +2356,7 @@ GLFWAPI void glfwHideWindow(GLFWwindow* window);
  *  initially created.  Set the [GLFW_FOCUSED](@ref window_hints_wnd) to disable
  *  this behavior.
  *
- *  __Do not use this function__ to steal focus from other applications unless
+ *  __Do not use this function__ to steal focus from other Simulations unless
  *  you are certain that is what the user wants.  Focus stealing can be
  *  extremely disruptive.
  *
@@ -2590,7 +2590,7 @@ GLFWAPI GLFWwindowsizefun glfwSetWindowSizeCallback(GLFWwindow* window, GLFWwind
  *
  *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED.
  *
- *  @remark @osx Selecting Quit from the application menu will trigger the close
+ *  @remark @osx Selecting Quit from the Simulation menu will trigger the close
  *  callback for all windows.
  *
  *  @thread_safety This function must only be called from the main thread.
@@ -2719,7 +2719,7 @@ GLFWAPI GLFWframebuffersizefun glfwSetFramebufferSizeCallback(GLFWwindow* window
  *  [window refresh callback](@ref window_refresh) to redraw the contents of
  *  your window when necessary during such operations.
  *
- *  On some platforms, certain events are sent directly to the application
+ *  On some platforms, certain events are sent directly to the Simulation
  *  without going through the event queue, causing callbacks to be called
  *  outside of a call to one of the event processing functions.
  *
@@ -2765,7 +2765,7 @@ GLFWAPI void glfwPollEvents(void);
  *  of the event processing functions.
  *
  *  If no windows exist, this function returns immediately.  For synchronization
- *  of threads in applications that do not create windows, use your threading
+ *  of threads in Simulations that do not create windows, use your threading
  *  library of choice.
  *
  *  Event processing is not required for joystick input to work.
@@ -2812,7 +2812,7 @@ GLFWAPI void glfwWaitEvents(void);
  *  of the event processing functions.
  *
  *  If no windows exist, this function returns immediately.  For synchronization
- *  of threads in applications that do not create windows, use your threading
+ *  of threads in Simulations that do not create windows, use your threading
  *  library of choice.
  *
  *  Event processing is not required for joystick input to work.
@@ -2839,7 +2839,7 @@ GLFWAPI void glfwWaitEventsTimeout(double timeout);
  *  queue, causing @ref glfwWaitEvents to return.
  *
  *  If no windows exist, this function returns immediately.  For synchronization
- *  of threads in applications that do not create windows, use your threading
+ *  of threads in Simulations that do not create windows, use your threading
  *  library of choice.
  *
  *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED and @ref
@@ -3907,7 +3907,7 @@ GLFWAPI void glfwSwapBuffers(GLFWwindow* window);
  *  interval to be reset to zero once it has been set to a non-zero value.
  *
  *  @remark Some GPU drivers do not honor the requested swap interval, either
- *  because of a user setting that overrides the application's request or due to
+ *  because of a user setting that overrides the Simulation's request or due to
  *  bugs in the driver.
  *
  *  @thread_safety This function may be called from any thread.

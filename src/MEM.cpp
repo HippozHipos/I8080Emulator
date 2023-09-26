@@ -40,6 +40,7 @@ void Memory::Reset()
 	for (uint16_t i = 0; i < TotalAdrSpaceUprBnd; i++) { i = 0x00; }
 	//memset() is the equivelant alternative for this
 }
+
 /*
 void stackPush(uint16_t value)
 {

@@ -9,9 +9,9 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 // Win32 message handler
 // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
-// - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
-// - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
-// Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
+// - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main Simulation, or clear/overwrite your copy of the mouse data.
+// - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main Simulation, or clear/overwrite your copy of the keyboard data.
+// Generally you may always pass all inputs to dear imgui, and hide them from your Simulation based on those two flags.
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
@@ -28,7 +28,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
         }
         return 0;
     case WM_SYSCOMMAND:
-        if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT application menu
+        if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT Simulation menu
             return 0;
         break;
     case WM_DESTROY:

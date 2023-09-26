@@ -54,7 +54,7 @@
 //  2019-12-17: Inputs: On Wayland, use SDL_GetMouseState (because there is no global mouse state).
 //  2019-12-05: Inputs: Added support for ImGuiMouseCursor_NotAllowed mouse cursor.
 //  2019-07-21: Inputs: Added mapping for ImGuiKey_KeyPadEnter.
-//  2019-04-23: Inputs: Added support for SDL_GameController (if ImGuiConfigFlags_NavEnableGamepad is set by user application).
+//  2019-04-23: Inputs: Added support for SDL_GameController (if ImGuiConfigFlags_NavEnableGamepad is set by user Simulation).
 //  2019-03-12: Misc: Preserve DisplayFramebufferScale when main window is minimized.
 //  2018-12-21: Inputs: Workaround for Android/iOS which don't seem to handle focus related calls.
 //  2018-11-30: Misc: Setting up io.BackendPlatformName so it can be displayed in the About Window.
@@ -232,7 +232,7 @@ static ImGuiKey ImGui_ImplSDL2_KeycodeToImGuiKey(int keycode)
         case SDLK_RSHIFT: return ImGuiKey_RightShift;
         case SDLK_RALT: return ImGuiKey_RightAlt;
         case SDLK_RGUI: return ImGuiKey_RightSuper;
-        case SDLK_APPLICATION: return ImGuiKey_Menu;
+        case SDLK_Simulation: return ImGuiKey_Menu;
         case SDLK_0: return ImGuiKey_0;
         case SDLK_1: return ImGuiKey_1;
         case SDLK_2: return ImGuiKey_2;
@@ -295,9 +295,9 @@ static void ImGui_ImplSDL2_UpdateKeyModifiers(SDL_Keymod sdl_key_mods)
 }
 
 // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
-// - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
-// - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
-// Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
+// - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main Simulation, or clear/overwrite your copy of the mouse data.
+// - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main Simulation, or clear/overwrite your copy of the keyboard data.
+// Generally you may always pass all inputs to dear imgui, and hide them from your Simulation based on those two flags.
 // If you have multiple SDL events and some of them are not meant to be used by dear imgui, you may need to filter events based on their windowID field.
 bool ImGui_ImplSDL2_ProcessEvent(const SDL_Event* event)
 {
@@ -484,7 +484,7 @@ static bool ImGui_ImplSDL2_Init(SDL_Window* window, SDL_Renderer* renderer, void
 
     // From 2.0.5: Set SDL hint to receive mouse click events on window focus, otherwise SDL doesn't emit the event.
     // Without this, when clicking to gain focus, our widgets wouldn't activate even though they showed as hovered.
-    // (This is unfortunately a global SDL setting, so enabling it might have a side-effect on your application.
+    // (This is unfortunately a global SDL setting, so enabling it might have a side-effect on your Simulation.
     // It is unlikely to make a difference, but if your app absolutely needs to ignore the initial on-focus click:
     // you can ignore SDL_MOUSEBUTTONDOWN events coming right after a SDL_WINDOWEVENT_FOCUS_GAINED)
 #ifdef SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH
@@ -493,7 +493,7 @@ static bool ImGui_ImplSDL2_Init(SDL_Window* window, SDL_Renderer* renderer, void
 
     // From 2.0.18: Enable native IME.
     // IMPORTANT: This is used at the time of SDL_CreateWindow() so this will only affects secondary windows, if any.
-    // For the main window to be affected, your application needs to call this manually before calling SDL_CreateWindow().
+    // For the main window to be affected, your Simulation needs to call this manually before calling SDL_CreateWindow().
 #ifdef SDL_HINT_IME_SHOW_UI
     SDL_SetHint(SDL_HINT_IME_SHOW_UI, "1");
 #endif
@@ -712,7 +712,7 @@ static void ImGui_ImplSDL2_UpdateMonitors()
     int display_count = SDL_GetNumVideoDisplays();
     for (int n = 0; n < display_count; n++)
     {
-        // Warning: the validity of monitor DPI information on Windows depends on the application DPI awareness settings, which generally needs to be set in the manifest or at runtime.
+        // Warning: the validity of monitor DPI information on Windows depends on the Simulation DPI awareness settings, which generally needs to be set in the manifest or at runtime.
         ImGuiPlatformMonitor monitor;
         SDL_Rect r;
         SDL_GetDisplayBounds(n, &r);
@@ -1019,7 +1019,7 @@ static void ImGui_ImplSDL2_InitPlatformInterface(SDL_Window* window, void* sdl_g
     platform_io.Platform_CreateVkSurface = ImGui_ImplSDL2_CreateVkSurface;
 #endif
 
-    // Register main window handle (which is owned by the main application, not by us)
+    // Register main window handle (which is owned by the main Simulation, not by us)
     // This is mostly for simplicity and consistency, so that our code (e.g. mouse handling etc.) can use same logic for main and secondary viewports.
     ImGuiViewport* main_viewport = ImGui::GetMainViewport();
     ImGui_ImplSDL2_ViewportData* vd = IM_NEW(ImGui_ImplSDL2_ViewportData)();

@@ -10,7 +10,7 @@ warranty. In no event will the authors be held liable for any damages
 arising from the use of this software.
 
 Permission is granted to anyone to use this software for any purpose,
-including commercial applications, and to alter it and redistribute it
+including commercial Simulations, and to alter it and redistribute it
 freely, subject to the following restrictions:
 
    1. The origin of this software must not be misrepresented; you must not
@@ -295,7 +295,7 @@ typedef void		(*uSynergyJoystickCallback)(uSynergyCookie cookie, uint8_t joyNum,
 
 This callback is called when something is placed on the clipboard. Multiple callbacks may be fired for
 multiple clipboard formats if they are supported. The data provided is read-only and may not be modified
-by the application.
+by the Simulation.
 
 @param cookie		Cookie supplied in the Synergy context
 @param format		Clipboard format
