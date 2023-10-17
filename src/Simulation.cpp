@@ -19,6 +19,7 @@ Simulation::Simulation()
         imgooey::SetFlags(ImGuiConfigFlags_NavEnableGamepad | ImGuiConfigFlags_NavEnableKeyboard);
 
         memview->setup(&this->mem.m_Memory);
+		memview->setup_cpu(&this->cpu);
 
 		InitOpcodeTable();
 }
@@ -77,7 +78,7 @@ void Simulation::constructMemory()
 
 void Simulation::Run()
 {
-
+	this->cpu.toggleStart();
     constructMemory();
 
     // Main loop

@@ -7,6 +7,7 @@
 
 CPU::CPU()
 {
+	start = false;
 }
 
 //assumes memory has been loaded into ram (think of disk being loaded into memory)
@@ -17,6 +18,9 @@ void CPU::startExecAt(Memory* mem)
 
 void CPU::execute_opcode(opcode* cur_op, Memory* mem)
 {
+
+	while (!start) {}
+
 	//opcode* cur_op = opcodeLookup[index].get(); 
 	// DO NOT USE .GET() IT USES A TEMPORARY AS A RETURN VALUE
 	// THAT MEANS YOU THEN TRY TO ASSIGN A DESTROYED TEMPORARY WHEN YOU EXIT THE SCOPE OF .GET()
@@ -29,6 +33,7 @@ void CPU::execute_opcode(opcode* cur_op, Memory* mem)
 		int cyclefreq = (1 / this->ProcesserFrequency) * 1000000000;
 		this->PC += cur_op->m_size; //NOt 100 percent sure this is right 
 		timer.Sleep((cyclefreq * cur_op->m_cycle_duration) - timer.Time());
+		//add timer.accumulate, so we can see how long it takes to execute every instruction
 	}
 	else
 	{
@@ -42,6 +47,13 @@ std::string CPU::RegToStr(int r)
 {
 	static const char* reg[] = { "A", "B", "C", "BC", "D", "E", "DE", "H", "L", "HL", "SP" };
 	return reg[r];
+}
+
+void CPU::toggleStart()
+{
+
+	this->start = !this->start; //add a check in CPU to check if start is toggled or not
+
 }
 
 void CPU::load_register_value(Registers reg, uint8_t* value)

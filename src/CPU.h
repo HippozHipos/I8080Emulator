@@ -36,7 +36,7 @@ class CPU
 public:
 	// Main Registers
 	//Registers B, C, D, E, H, L are 8 bits, but can be combined into 3 16 bit registers
-	uint8_t A; //Accumulator
+	uint8_t A = 0; //Accumulator
 
 	//The A register is used to store the result of operations, whilst the other 6 registers are often used in 16-bit pairs B-C D-E H-L
 
@@ -107,6 +107,7 @@ public:
 	void load_register_value(Registers reg, uint8_t* value);
 	void execute_opcode(opcode* cur_op, Memory* mem);
 	void startExecAt(Memory* mem);
+	void toggleStart();
 
 public:
 	static std::string RegToStr(int r);
@@ -121,6 +122,7 @@ private:
 private:
 	ErrorCode cpu_LastError;
 	Timer timer;
+	static bool start;
 	//this is done to avoid using a constructor/destructor, and thus we just call the functions themselves. 
 	//if opcode* is used, we would need to use a constructor and destructor to avoid memory leaks
 	//std::shared_ptr<opcode> opcodeLookup[256]; //this equiveleant to opcode* opcodeLookup[255]

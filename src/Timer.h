@@ -16,6 +16,8 @@ public:
 		std::this_thread::sleep_for((DurationType)t);
 	}
 
+	//void Timer::Accumulate() <- this will be how we add all the time we spent executing instructions
+
 	void Reset() noexcept;
 
 private:
